@@ -258,7 +258,7 @@ CREATE TABLE `products`
 
 CREATE TABLE `categories`
 (
-    `id`        BIGINT      NOT NULL AUTO_INCREMENT,
+    `id`        BIGINT      NOT NULL,
     `name`      VARCHAR(30) NOT NULL,
     `is_shown`  BOOLEAN     NOT NULL DEFAULT TRUE,
     `order`     INT         NULL,
