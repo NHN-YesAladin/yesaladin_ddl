@@ -263,6 +263,7 @@ CREATE TABLE `categories`
     `is_shown`  BOOLEAN     NOT NULL DEFAULT TRUE,
     `order`     INT         NULL,
     `parent_id` BIGINT      NULL,
+    `depth`     INT         NOT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `categories_parent_ref` FOREIGN KEY (`parent_id`) REFERENCES `categories` (`id`)
 );
