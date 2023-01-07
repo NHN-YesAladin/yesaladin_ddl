@@ -45,6 +45,7 @@ CREATE TABLE `members`
     `birth_month`     INT          NOT NULL,
     `birth_day`       INT          NOT NULL,
     `email`           VARCHAR(100) NOT NULL,
+    `phone`           VARCHAR(11)  NOT NULL,
     `sign_up_date`    DATE         NOT NULL,
     `withdrawal_date` DATE         NULL,
     `is_withdrawal`   BOOLEAN      NOT NULL DEFAULT FALSE,
