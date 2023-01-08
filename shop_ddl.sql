@@ -12,8 +12,7 @@ CREATE TABLE `accessors`
 CREATE TABLE `files`
 (
     `id`              BIGINT      NOT NULL AUTO_INCREMENT,
-    `uuid`            VARCHAR(50) NOT NULL,
-    `extension`       VARCHAR(10) NOT NULL,
+    `name`            VARCHAR(50) NOT NULL,
     `upload_datetime` DATETIME    NOT NULL DEFAULT NOW(),
     PRIMARY KEY (`id`)
 );
@@ -242,7 +241,8 @@ CREATE TABLE `products`
     `published_date`                DATE         NULL,
     `preferential_show_ranking`     INT          NOT NULL,
     `publisher_id`                  BIGINT       NOT NULL,
-    `file_id`                       BIGINT       NOT NULL,
+    `thumbnail_file_id`             BIGINT       NOT NULL,
+    `ebook_file_id`                 BIGINT       NOT NULL,
     `product_type_code_id`          INT          NOT NULL,
     `discount_rate_id`              INT          NULL,
     `product_saving_method_code_id` INT          NOT NULL,
@@ -250,7 +250,8 @@ CREATE TABLE `products`
     CONSTRAINT `products_isbn_unique` UNIQUE (`ISBN`),
     CONSTRAINT `products_subscribe_product_ref` FOREIGN KEY (`subscribe_product_id`) REFERENCES `subscribe_products` (`id`),
     CONSTRAINT `products_publisher_ref` FOREIGN KEY (`publisher_id`) REFERENCES `publishers` (`id`),
-    CONSTRAINT `products_file_ref` FOREIGN KEY (`file_id`) REFERENCES `files` (`id`),
+    CONSTRAINT `products_thumbnail_file_ref` FOREIGN KEY (`thumbnail_file_id`) REFERENCES `files` (`id`),
+    CONSTRAINT `products_ebook_file_ref` FOREIGN KEY (`ebook_file_id`) REFERENCES `files` (`id`),
     CONSTRAINT `products_type_code_ref` FOREIGN KEY (`product_type_code_id`) REFERENCES `product_type_codes` (`id`),
     CONSTRAINT `products_discount_rate_ref` FOREIGN KEY (`discount_rate_id`) REFERENCES `total_discount_rates` (`id`),
     CONSTRAINT `products_saving_method_code_ref` FOREIGN KEY (`product_saving_method_code_id`) REFERENCES `product_saving_method_codes` (`id`)
