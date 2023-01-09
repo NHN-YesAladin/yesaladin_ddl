@@ -238,9 +238,7 @@ CREATE TABLE `products`
     `is_sale`                       BOOLEAN      NOT NULL DEFAULT TRUE,
     `is_forced_out_of_stock`        BOOLEAN      NOT NULL DEFAULT FALSE,
     `quantity`                      BIGINT       NOT NULL,
-    `published_date`                DATE         NULL,
     `preferential_show_ranking`     INT          NOT NULL,
-    `publisher_id`                  BIGINT       NOT NULL,
     `thumbnail_file_id`             BIGINT       NOT NULL,
     `ebook_file_id`                 BIGINT       NOT NULL,
     `product_type_code_id`          INT          NOT NULL,
@@ -249,12 +247,21 @@ CREATE TABLE `products`
     PRIMARY KEY (`id`),
     CONSTRAINT `products_isbn_unique` UNIQUE (`ISBN`),
     CONSTRAINT `products_subscribe_product_ref` FOREIGN KEY (`subscribe_product_id`) REFERENCES `subscribe_products` (`id`),
-    CONSTRAINT `products_publisher_ref` FOREIGN KEY (`publisher_id`) REFERENCES `publishers` (`id`),
     CONSTRAINT `products_thumbnail_file_ref` FOREIGN KEY (`thumbnail_file_id`) REFERENCES `files` (`id`),
     CONSTRAINT `products_ebook_file_ref` FOREIGN KEY (`ebook_file_id`) REFERENCES `files` (`id`),
     CONSTRAINT `products_type_code_ref` FOREIGN KEY (`product_type_code_id`) REFERENCES `product_type_codes` (`id`),
     CONSTRAINT `products_discount_rate_ref` FOREIGN KEY (`discount_rate_id`) REFERENCES `total_discount_rates` (`id`),
     CONSTRAINT `products_saving_method_code_ref` FOREIGN KEY (`product_saving_method_code_id`) REFERENCES `product_saving_method_codes` (`id`)
+);
+
+
+CREATE TABLE `publish` (
+	`product_id`	bigint	NOT NULL,
+	`publisher_id`	bigint	NOT NULL,
+	`published_date`	date	NOT NULL,
+     PRIMARY KEY (`product_id`, `publisher_id`),
+     CONSTRAINT `publish_products_ref` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`),
+     CONSTRAINT `publish_publishers_ref` FOREIGN KEY (`publisher_id`) REFERENCES `publishers` (`id`)
 );
 
 
