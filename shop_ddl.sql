@@ -741,3 +741,7 @@ INSERT INTO `payment_codes`
 VALUES (5, 'NORMAL');
 INSERT INTO `payment_codes`
 VALUES (6, 'AUTO');
+
+# 전체 할인율 초기설정
+INSERT INTO `total_discount_rates` 
+VALUES (1, 10);
