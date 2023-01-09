@@ -14,7 +14,8 @@ CREATE TABLE `files`
     `id`              BIGINT      NOT NULL AUTO_INCREMENT,
     `name`            VARCHAR(50) NOT NULL,
     `upload_datetime` DATETIME    NOT NULL DEFAULT NOW(),
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    CONSTRAINT `files_name_unique` UNIQUE (`name`)
 );
 
 CREATE TABLE `member_gender_codes`
