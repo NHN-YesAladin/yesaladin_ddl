@@ -57,6 +57,7 @@ CREATE TABLE `members`
     CONSTRAINT `members_nickname_unique` UNIQUE (`nickname`),
     CONSTRAINT `members_login_id_unique` UNIQUE (`login_id`),
     CONSTRAINT `members_email_unique` UNIQUE (`email`),
+    CONSTRAINT `members_phone_unique` UNIQUE (`phone`),
     CONSTRAINT `members_grade_ref` FOREIGN KEY (`member_grade_id`) REFERENCES `member_grades` (`id`),
     CONSTRAINT `members_gender_ref` FOREIGN KEY (`gender_code`) REFERENCES `member_gender_codes` (`id`)
 );
