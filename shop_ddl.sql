@@ -540,7 +540,7 @@ CREATE TABLE `reviews`
 (
     `id`               BIGINT       NOT NULL AUTO_INCREMENT,
     `order_product_id` BIGINT       NOT NULL,
-    `comment`          VARCHAR(255) NOT NULL,
+    `comment`          TEXT NOT NULL,
     `gpa`              INT          NOT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `reviews_order_product_ref` FOREIGN KEY (`order_product_id`) REFERENCES `order_products` (`id`)
