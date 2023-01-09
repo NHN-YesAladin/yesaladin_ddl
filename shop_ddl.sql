@@ -76,7 +76,7 @@ CREATE TABLE `member_grade_histories`
 
 CREATE TABLE `point_codes`
 (
-    `id`   INT         NOT NULL,
+    `id`         INT         NOT NULL,
     `point_code` VARCHAR(15) NOT NULL,
     PRIMARY KEY (`id`)
 );
@@ -158,7 +158,7 @@ CREATE TABLE `inquiry_codes`
 (
     `id`           BIGINT      NOT NULL AUTO_INCREMENT,
     `inquiry_type` VARCHAR(15) NOT NULL,
-    PRIMARY KEY (id)
+    PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `inquiries`
@@ -257,13 +257,14 @@ CREATE TABLE `products`
 );
 
 
-CREATE TABLE `publish` (
-	`product_id`	bigint	NOT NULL,
-	`publisher_id`	bigint	NOT NULL,
-	`published_date`	date	NOT NULL,
-     PRIMARY KEY (`product_id`, `publisher_id`),
-     CONSTRAINT `publish_products_ref` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`),
-     CONSTRAINT `publish_publishers_ref` FOREIGN KEY (`publisher_id`) REFERENCES `publishers` (`id`)
+CREATE TABLE `publish`
+(
+    `product_id`     BIGINT NOT NULL,
+    `publisher_id`   BIGINT NOT NULL,
+    `published_date` DATE   NOT NULL,
+    PRIMARY KEY (`product_id`, `publisher_id`),
+    CONSTRAINT `publish_products_ref` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`),
+    CONSTRAINT `publish_publishers_ref` FOREIGN KEY (`publisher_id`) REFERENCES `publishers` (`id`)
 );
 
 
@@ -458,7 +459,7 @@ CREATE TABLE `non_member_orders`
     `order_id`     BIGINT       NOT NULL,
     `address`      VARCHAR(255) NOT NULL,
     `name`         VARCHAR(20)  NOT NULL,
-    `phone_number` VARCHAR(13)  NOT NULL,
+    `phone_number` VARCHAR(11)  NOT NULL,
     PRIMARY KEY (`order_id`),
     CONSTRAINT `non_member_orders_order_ref` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`)
 );
@@ -531,7 +532,7 @@ CREATE TABLE `subscribe_orders`
     `order_id`       BIGINT  NOT NULL,
     `subscribe_id`   BIGINT  NOT NULL,
     `is_transported` BOOLEAN NOT NULL,
-    `expected_date`   DATE    NOT NULL,
+    `expected_date`  DATE    NOT NULL,
     PRIMARY KEY (`order_id`, `subscribe_id`),
     CONSTRAINT `subscribe_orders_order_ref` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`),
     CONSTRAINT `subscribe_orders_subscribe_ref` FOREIGN KEY (`subscribe_id`) REFERENCES `subscribes` (`id`)
@@ -539,10 +540,10 @@ CREATE TABLE `subscribe_orders`
 
 CREATE TABLE `reviews`
 (
-    `id`               BIGINT       NOT NULL AUTO_INCREMENT,
-    `order_product_id` BIGINT       NOT NULL,
-    `comment`          TEXT NOT NULL,
-    `gpa`              INT          NOT NULL,
+    `id`               BIGINT NOT NULL AUTO_INCREMENT,
+    `order_product_id` BIGINT NOT NULL,
+    `comment`          TEXT   NOT NULL,
+    `gpa`              INT    NOT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `reviews_order_product_ref` FOREIGN KEY (`order_product_id`) REFERENCES `order_products` (`id`)
 );
@@ -705,7 +706,7 @@ VALUES (4, 'POPULARITY');
 INSERT INTO `product_type_codes`
 VALUES (5, 'DISCOUNTS');
 INSERT INTO `product_type_codes`
-VALUES (6, 'NULL');
+VALUES (6, 'NONE');
 
 # 주문 코드
 INSERT INTO `order_codes`
@@ -744,5 +745,5 @@ INSERT INTO `payment_codes`
 VALUES (6, 'AUTO');
 
 # 전체 할인율 초기설정
-INSERT INTO `total_discount_rates` 
+INSERT INTO `total_discount_rates`
 VALUES (1, 10);
