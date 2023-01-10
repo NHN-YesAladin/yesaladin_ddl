@@ -218,7 +218,7 @@ CREATE TABLE `total_discount_rates`
 
 CREATE TABLE `subscribe_products`
 (
-    `id`   BIGINT     NOT NULL,
+    `id`   BIGINT     NOT NULL  AUTO_INCREMENT,
     `ISSN` VARCHAR(9) NOT NULL,
     PRIMARY KEY (`id`)
 );
