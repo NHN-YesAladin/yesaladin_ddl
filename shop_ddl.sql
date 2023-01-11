@@ -1,3 +1,5 @@
+USE `yesaladin_shop_prod`;
+
 CREATE TABLE `accessors`
 (
     `id`              BIGINT      NOT NULL AUTO_INCREMENT,
@@ -13,7 +15,7 @@ CREATE TABLE `files`
 (
     `id`              BIGINT      NOT NULL AUTO_INCREMENT,
     `name`            VARCHAR(50) NOT NULL,
-    `upload_datetime` DATETIME    NOT NULL DEFAULT "NOW"(),
+    `upload_datetime` DATETIME    NOT NULL DEFAULT NOW(),
     PRIMARY KEY (`id`),
     CONSTRAINT `files_name_unique` UNIQUE (`name`)
 );
@@ -221,7 +223,7 @@ CREATE TABLE `subscribe_products`
     `id`   BIGINT     NOT NULL AUTO_INCREMENT,
     `ISSN` VARCHAR(9) NOT NULL,
     PRIMARY KEY (`id`),
-    CONSTRAINT "subscribe_products_issn_unique" UNIQUE (`ISSN`)
+    CONSTRAINT `subscribe_products_issn_unique` UNIQUE (`ISSN`)
 );
 
 CREATE TABLE `products`
@@ -328,8 +330,8 @@ CREATE TABLE `authors`
 
 CREATE TABLE `writing`
 (
-    `product_id`  BIGINT      NOT NULL,
-    `author_id`   BIGINT      NOT NULL,
+    `product_id` BIGINT NOT NULL,
+    `author_id`  BIGINT NOT NULL,
     PRIMARY KEY (`product_id`, `author_id`),
     CONSTRAINT `writing_product_ref` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`),
     CONSTRAINT `writing_author_ref` FOREIGN KEY (`author_id`) REFERENCES `authors` (`id`)
@@ -338,7 +340,7 @@ CREATE TABLE `writing`
 CREATE TABLE `wishlists`
 (
     `id`                  BIGINT   NOT NULL AUTO_INCREMENT,
-    `registered_datetime` DATETIME NOT NULL DEFAULT "NOW"(),
+    `registered_datetime` DATETIME NOT NULL DEFAULT NOW(),
     `product_id`          BIGINT   NOT NULL,
     `member_id`           BIGINT   NOT NULL,
     PRIMARY KEY (`id`),
@@ -452,7 +454,7 @@ CREATE TABLE `orders`
 (
     `id`                      BIGINT       NOT NULL AUTO_INCREMENT,
     `order_number`            VARCHAR(18)  NOT NULL,
-    "name"                    VARCHAR(255) NOT NULL,
+    `name`                    VARCHAR(255) NOT NULL,
     `order_datetime`          DATETIME     NOT NULL,
     `expected_transport_date` DATE         NOT NULL,
     `is_hidden`               BOOLEAN      NOT NULL DEFAULT FALSE,
@@ -485,18 +487,6 @@ CREATE TABLE `member_orders`
     CONSTRAINT `member_orders_member_ref` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`)
 );
 
-CREATE TABLE `subscribes`
-(
-    `id`                 BIGINT  NOT NULL AUTO_INCREMENT,
-    `is_transported`     BOOLEAN NOT NULL,
-    `expected_date`      DATE    NOT NULL,
-    `subscribe_order_id` BIGINT  NOT NULL,
-    `member_order_id`    BIGINT  NULL,
-    PRIMARY KEY (`id`),
-    CONSTRAINT `subscribes_member_order_ref` FOREIGN KEY (`member_order_id`) REFERENCES `member_orders` (`order_id`),
-    CONSTRAINT `subscribes_subscribe_order_ref` FOREIGN KEY (`subscribe_order_id`) REFERENCES `subscribe_orders` (`order_id`)
-);
-
 CREATE TABLE `order_products`
 (
     `id`          BIGINT  NOT NULL AUTO_INCREMENT,
@@ -506,7 +496,7 @@ CREATE TABLE `order_products`
     `order_id`    BIGINT  NOT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `order_products_product_ref` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`),
-    CONSTRAINT `order_products_member_order_ref` FOREIGN KEY (`order_id`) REFERENCES "member_orders" (`order_id`)
+    CONSTRAINT `order_products_member_order_ref` FOREIGN KEY (`order_id`) REFERENCES `member_orders` (`order_id`)
 );
 
 CREATE TABLE `order_status_codes`
@@ -545,6 +535,18 @@ CREATE TABLE `subscribe_orders`
     PRIMARY KEY (`order_id`),
     CONSTRAINT `subscribe_orders_member_order_ref` FOREIGN KEY (`order_id`) REFERENCES `member_orders` (`order_id`),
     CONSTRAINT `subscribe_orders_subscribe_product_ref` FOREIGN KEY (`subscribe_product_id`) REFERENCES `subscribe_products` (`id`)
+);
+
+CREATE TABLE `subscribes`
+(
+    `id`                 BIGINT  NOT NULL AUTO_INCREMENT,
+    `is_transported`     BOOLEAN NOT NULL,
+    `expected_date`      DATE    NOT NULL,
+    `subscribe_order_id` BIGINT  NOT NULL,
+    `member_order_id`    BIGINT  NULL,
+    PRIMARY KEY (`id`),
+    CONSTRAINT `subscribes_member_order_ref` FOREIGN KEY (`member_order_id`) REFERENCES `member_orders` (`order_id`),
+    CONSTRAINT `subscribes_subscribe_order_ref` FOREIGN KEY (`subscribe_order_id`) REFERENCES `subscribe_orders` (`order_id`)
 );
 
 CREATE TABLE `reviews`
