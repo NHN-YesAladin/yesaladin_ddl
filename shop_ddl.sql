@@ -317,17 +317,23 @@ CREATE TABLE `related_products`
     CONSTRAINT `related_products_sub_ref` FOREIGN KEY (`product_sub_id`) REFERENCES `products` (`id`)
 );
 
-CREATE TABLE `writing`
+CREATE TABLE `authors`
 (
-    `id`          BIGINT      NOT NULL AUTO_INCREMENT,
-    `author_name` VARCHAR(50) NOT NULL,
-    `product_id`  BIGINT      NOT NULL,
-    `member_id`   BIGINT      NULL,
+    `id`        BIGINT      NOT NULL AUTO_INCREMENT,
+    `name`      VARCHAR(50) NOT NULL,
+    `member_id` BIGINT      NULL,
     PRIMARY KEY (`id`),
-    CONSTRAINT `writing_product_ref` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`),
-    CONSTRAINT `writing_member_ref` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`)
+    CONSTRAINT `author_member_ref` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`)
 );
 
+CREATE TABLE `writing`
+(
+    `product_id`  BIGINT      NOT NULL,
+    `author_id`   BIGINT      NOT NULL,
+    PRIMARY KEY (`product_id`, `author_id`),
+    CONSTRAINT `writing_product_ref` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`),
+    CONSTRAINT `writing_author_ref` FOREIGN KEY (`author_id`) REFERENCES `authors` (`id`)
+);
 
 CREATE TABLE `wishlists`
 (
