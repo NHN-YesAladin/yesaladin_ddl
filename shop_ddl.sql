@@ -218,7 +218,7 @@ CREATE TABLE `total_discount_rates`
 
 CREATE TABLE `subscribe_products`
 (
-    `id`   BIGINT     NOT NULL  AUTO_INCREMENT,
+    `id`   BIGINT     NOT NULL AUTO_INCREMENT,
     `ISSN` VARCHAR(9) NOT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT "subscribe_products_issn_unique" UNIQUE (`ISSN`)
@@ -247,7 +247,7 @@ CREATE TABLE `products`
     `product_type_code_id`          INT          NOT NULL,
     `discount_rate_id`              INT          NULL,
     `product_saving_method_code_id` INT          NOT NULL,
-    `is_deleted`        			BOOLEAN      NOT NULL DEFAULT FALSE,
+    `is_deleted`                    BOOLEAN      NOT NULL DEFAULT FALSE,
     PRIMARY KEY (`id`),
     CONSTRAINT `products_isbn_unique` UNIQUE (`ISBN`),
     CONSTRAINT `products_subscribe_product_ref` FOREIGN KEY (`subscribe_product_id`) REFERENCES `subscribe_products` (`id`),
@@ -538,7 +538,7 @@ CREATE TABLE `order_used_coupons`
 CREATE TABLE `subscribe_orders`
 (
     `order_id`             BIGINT NOT NULL,
-    `expected_date`        DATE   NOT NULL,
+    `expected_day`         INT    NOT NULL,
     `interval_month`       INT    NOT NULL,
     `next_renewal_date`    DATE   NOT NULL,
     `subscribe_product_id` BIGINT NOT NULL,
