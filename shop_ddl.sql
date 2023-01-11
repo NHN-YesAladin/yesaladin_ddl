@@ -456,7 +456,7 @@ CREATE TABLE `orders`
     `order_number`            VARCHAR(18)  NOT NULL,
     `name`                    VARCHAR(255) NOT NULL,
     `order_datetime`          DATETIME     NOT NULL,
-    `expected_transport_date` DATE         NOT NULL,
+    `expected_transport_date` DATE         NULL,
     `is_hidden`               BOOLEAN      NOT NULL DEFAULT FALSE,
     `used_point`              BIGINT       NOT NULL,
     `shipping_fee`            INT          NOT NULL,
@@ -518,14 +518,14 @@ CREATE TABLE `order_status_change_logs`
 
 CREATE TABLE `order_used_coupons`
 (
-    `order_id`           BIGINT NOT NULL,
+    `member_order_id`           BIGINT NOT NULL,
     `coupon_issuance_id` BIGINT NOT NULL,
-    PRIMARY KEY (`order_id`, `coupon_issuance_id`),
-    CONSTRAINT `order_used_coupons_member_order_ref` FOREIGN KEY (`order_id`) REFERENCES `member_orders` (`order_id`),
+    PRIMARY KEY (`member_order_id`, `coupon_issuance_id`),
+    CONSTRAINT `order_used_coupons_member_order_ref` FOREIGN KEY (`member_order_id`) REFERENCES `member_orders` (`order_id`),
     CONSTRAINT `order_used_coupons_coupon_issuance_ref` FOREIGN KEY (`coupon_issuance_id`) REFERENCES `coupon_issuances` (`id`)
 );
 
-CREATE TABLE `subscribe_orders`
+CREATE TABLE `subscribes`
 (
     `order_id`             BIGINT NOT NULL,
     `expected_day`         INT    NOT NULL,
@@ -537,16 +537,15 @@ CREATE TABLE `subscribe_orders`
     CONSTRAINT `subscribe_orders_subscribe_product_ref` FOREIGN KEY (`subscribe_product_id`) REFERENCES `subscribe_products` (`id`)
 );
 
-CREATE TABLE `subscribes`
+CREATE TABLE `subscribe_order_lists`
 (
     `id`                 BIGINT  NOT NULL AUTO_INCREMENT,
     `is_transported`     BOOLEAN NOT NULL,
-    `expected_date`      DATE    NOT NULL,
     `subscribe_order_id` BIGINT  NOT NULL,
     `member_order_id`    BIGINT  NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `subscribes_member_order_ref` FOREIGN KEY (`member_order_id`) REFERENCES `member_orders` (`order_id`),
-    CONSTRAINT `subscribes_subscribe_order_ref` FOREIGN KEY (`subscribe_order_id`) REFERENCES `subscribe_orders` (`order_id`)
+    CONSTRAINT `subscribes_subscribe_order_ref` FOREIGN KEY (`subscribe_order_id`) REFERENCES `subscribes` (`order_id`)
 );
 
 CREATE TABLE `reviews`
