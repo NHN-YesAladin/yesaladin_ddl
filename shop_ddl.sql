@@ -13,7 +13,7 @@ CREATE TABLE `files`
 (
     `id`              BIGINT      NOT NULL AUTO_INCREMENT,
     `name`            VARCHAR(50) NOT NULL,
-    `upload_datetime` DATETIME    NOT NULL DEFAULT NOW(),
+    `upload_datetime` DATETIME    NOT NULL DEFAULT "NOW"(),
     PRIMARY KEY (`id`),
     CONSTRAINT `files_name_unique` UNIQUE (`name`)
 );
@@ -220,7 +220,8 @@ CREATE TABLE `subscribe_products`
 (
     `id`   BIGINT     NOT NULL  AUTO_INCREMENT,
     `ISSN` VARCHAR(9) NOT NULL,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    CONSTRAINT "subscribe_products_issn_unique" UNIQUE (`ISSN`)
 );
 
 CREATE TABLE `products`
@@ -277,6 +278,7 @@ CREATE TABLE `categories`
     `order`     INT         NULL,
     `parent_id` BIGINT      NULL,
     `depth`     INT         NOT NULL,
+    `disable`   BOOLEAN     NOT NULL DEFAULT FALSE,
     PRIMARY KEY (`id`),
     CONSTRAINT `categories_parent_ref` FOREIGN KEY (`parent_id`) REFERENCES `categories` (`id`)
 );
@@ -330,7 +332,7 @@ CREATE TABLE `writing`
 CREATE TABLE `wishlists`
 (
     `id`                  BIGINT   NOT NULL AUTO_INCREMENT,
-    `registered_datetime` DATETIME NOT NULL DEFAULT NOW(),
+    `registered_datetime` DATETIME NOT NULL DEFAULT "NOW"(),
     `product_id`          BIGINT   NOT NULL,
     `member_id`           BIGINT   NOT NULL,
     PRIMARY KEY (`id`),
@@ -442,15 +444,16 @@ CREATE TABLE `order_codes`
 
 CREATE TABLE `orders`
 (
-    `id`                      BIGINT      NOT NULL AUTO_INCREMENT,
-    `order_number`            VARCHAR(18) NOT NULL,
-    `order_datetime`          DATETIME    NOT NULL,
-    `expected_transport_date` DATE        NOT NULL,
-    `is_hidden`               BOOLEAN     NOT NULL DEFAULT FALSE,
-    `used_point`              BIGINT      NOT NULL,
-    `shipping_fee`            INT         NOT NULL,
-    `wrapping_fee`            INT         NOT NULL,
-    `order_code_id`           INT         NOT NULL,
+    `id`                      BIGINT       NOT NULL AUTO_INCREMENT,
+    `order_number`            VARCHAR(18)  NOT NULL,
+    "name"                    VARCHAR(255) NOT NULL,
+    `order_datetime`          DATETIME     NOT NULL,
+    `expected_transport_date` DATE         NOT NULL,
+    `is_hidden`               BOOLEAN      NOT NULL DEFAULT FALSE,
+    `used_point`              BIGINT       NOT NULL,
+    `shipping_fee`            INT          NOT NULL,
+    `wrapping_fee`            INT          NOT NULL,
+    `order_code_id`           INT          NOT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `orders_order_number_unique` UNIQUE (`order_number`)
 );
@@ -478,16 +481,14 @@ CREATE TABLE `member_orders`
 
 CREATE TABLE `subscribes`
 (
-    `id`                   BIGINT NOT NULL AUTO_INCREMENT,
-    `interval_month`       INT    NOT NULL,
-    `next_renewal_date`    DATE   NOT NULL,
-    `member_address_id`    BIGINT NOT NULL,
-    `member_id`            BIGINT NOT NULL,
-    `subscribe_product_id` BIGINT NOT NULL,
+    `id`                 BIGINT  NOT NULL AUTO_INCREMENT,
+    `is_transported`     BOOLEAN NOT NULL,
+    `expected_date`      DATE    NOT NULL,
+    `subscribe_order_id` BIGINT  NOT NULL,
+    `member_order_id`    BIGINT  NULL,
     PRIMARY KEY (`id`),
-    CONSTRAINT `subscribes_member_address_ref` FOREIGN KEY (`member_address_id`) REFERENCES `member_addresses` (`id`),
-    CONSTRAINT `subscribes_member_ref` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`),
-    CONSTRAINT `subscribes_subscribe_product_ref` FOREIGN KEY (`subscribe_product_id`) REFERENCES `subscribe_products` (`id`)
+    CONSTRAINT `subscribes_member_order_ref` FOREIGN KEY (`member_order_id`) REFERENCES `member_orders` (`order_id`),
+    CONSTRAINT `subscribes_subscribe_order_ref` FOREIGN KEY (`subscribe_order_id`) REFERENCES `subscribe_orders` (`order_id`)
 );
 
 CREATE TABLE `order_products`
@@ -499,7 +500,7 @@ CREATE TABLE `order_products`
     `order_id`    BIGINT  NOT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `order_products_product_ref` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`),
-    CONSTRAINT `order_products_order_ref` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`)
+    CONSTRAINT `order_products_member_order_ref` FOREIGN KEY (`order_id`) REFERENCES "member_orders" (`order_id`)
 );
 
 CREATE TABLE `order_status_codes`
@@ -524,19 +525,20 @@ CREATE TABLE `order_used_coupons`
     `order_id`           BIGINT NOT NULL,
     `coupon_issuance_id` BIGINT NOT NULL,
     PRIMARY KEY (`order_id`, `coupon_issuance_id`),
-    CONSTRAINT `order_used_coupons_order_ref` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`),
+    CONSTRAINT `order_used_coupons_member_order_ref` FOREIGN KEY (`order_id`) REFERENCES `member_orders` (`order_id`),
     CONSTRAINT `order_used_coupons_coupon_issuance_ref` FOREIGN KEY (`coupon_issuance_id`) REFERENCES `coupon_issuances` (`id`)
 );
 
 CREATE TABLE `subscribe_orders`
 (
-    `order_id`       BIGINT  NOT NULL,
-    `subscribe_id`   BIGINT  NOT NULL,
-    `is_transported` BOOLEAN NOT NULL,
-    `expected_date`  DATE    NOT NULL,
-    PRIMARY KEY (`order_id`, `subscribe_id`),
-    CONSTRAINT `subscribe_orders_order_ref` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`),
-    CONSTRAINT `subscribe_orders_subscribe_ref` FOREIGN KEY (`subscribe_id`) REFERENCES `subscribes` (`id`)
+    `order_id`             BIGINT NOT NULL,
+    `expected_date`        DATE   NOT NULL,
+    `interval_month`       INT    NOT NULL,
+    `next_renewal_date`    DATE   NOT NULL,
+    `subscribe_product_id` BIGINT NOT NULL,
+    PRIMARY KEY (`order_id`),
+    CONSTRAINT `subscribe_orders_member_order_ref` FOREIGN KEY (`order_id`) REFERENCES `member_orders` (`order_id`),
+    CONSTRAINT `subscribe_orders_subscribe_product_ref` FOREIGN KEY (`subscribe_product_id`) REFERENCES `subscribe_products` (`id`)
 );
 
 CREATE TABLE `reviews`
@@ -627,7 +629,7 @@ CREATE TABLE `payment_cancels`
 
 #=======================================================================================================================
 
-# 회원 등급
+#회원등급
 INSERT INTO `member_grades`
 VALUES (1, 'WHITE', 100000, 1000);
 INSERT INTO `member_grades`
@@ -637,13 +639,13 @@ VALUES (3, 'GOLD', 300000, 5000);
 INSERT INTO `member_grades`
 VALUES (4, 'PLATINUM', 500000, 10000);
 
-# 회원 성별
+#회원성별
 INSERT INTO `member_gender_codes`
 VALUES (1, 'MALE');
 INSERT INTO `member_gender_codes`
 VALUES (2, 'FEMALE');
 
-# 권한
+#권한
 INSERT INTO `roles`
 VALUES (1, 'ROLE_USER');
 INSERT INTO `roles`
@@ -651,25 +653,25 @@ VALUES (2, 'ROLE_AUTHOR');
 INSERT INTO `roles`
 VALUES (3, 'ROLE_ADMIN');
 
-# 관리자용 글 코드
+#관리자용글코드
 INSERT INTO `admin_posts_codes`
 VALUES (1, 'FAQ');
 INSERT INTO `admin_posts_codes`
 VALUES (2, 'NOTICE');
 
-# 문의 불량 코드
+#문의불량코드
 INSERT INTO `inquiry_codes`
 VALUES (1, 'QUESTION');
 INSERT INTO `inquiry_codes`
 VALUES (2, 'DEFECT');
 
-# 포인트 코드
+#포인트코드
 INSERT INTO `point_codes`
 VALUES (1, 'USE');
 INSERT INTO `point_codes`
 VALUES (2, 'SAVE');
 
-# 쿠폰 코드
+#쿠폰코드
 INSERT INTO `coupon_codes`
 VALUES (1, 'FIXED_PRICE');
 INSERT INTO `coupon_codes`
@@ -681,7 +683,7 @@ VALUES (4, 'USER_DOWNLOAD');
 INSERT INTO `coupon_codes`
 VALUES (5, 'AUTO_ISSUANCE');
 
-# 쿠폰 적용범위 코드
+#쿠폰적용범위코드
 INSERT INTO `coupon_bound_codes`
 VALUES (1, 'ALL');
 INSERT INTO `coupon_bound_codes`
@@ -689,13 +691,13 @@ VALUES (2, 'CATEGORY');
 INSERT INTO `coupon_bound_codes`
 VALUES (3, 'INDIVIDUAL');
 
-# 상품 적립 방식 코드
+#상품적립방식코드
 INSERT INTO `product_saving_method_codes`
 VALUES (1, 'ACTUAL_PURCHASE_PRICE');
 INSERT INTO `product_saving_method_codes`
 VALUES (2, 'SELLING_PRICE');
 
-# 상품 유형 코드
+#상품유형코드
 INSERT INTO `product_type_codes`
 VALUES (1, 'BESTSELLER');
 INSERT INTO `product_type_codes`
@@ -709,7 +711,7 @@ VALUES (5, 'DISCOUNTS');
 INSERT INTO `product_type_codes`
 VALUES (6, 'NONE');
 
-# 주문 코드
+#주문코드
 INSERT INTO `order_codes`
 VALUES (1, 'NON_MEMBER_ORDER');
 INSERT INTO `order_codes`
@@ -717,7 +719,7 @@ VALUES (2, 'MEMBER_ORDER');
 INSERT INTO `order_codes`
 VALUES (3, 'MEMBER_SUBSCRIBE');
 
-# 주문 상태 코드
+#주문상태코드
 INSERT INTO `order_status_codes`
 VALUES (1, 'ORDER');
 INSERT INTO `order_status_codes`
@@ -731,7 +733,7 @@ VALUES (5, 'COMPLETE');
 INSERT INTO `order_status_codes`
 VALUES (6, 'REFUND');
 
-# 결제 코드
+#결제코드
 INSERT INTO `payment_codes`
 VALUES (1, 'INDIVIDUAL');
 INSERT INTO `payment_codes`
@@ -745,6 +747,6 @@ VALUES (5, 'NORMAL');
 INSERT INTO `payment_codes`
 VALUES (6, 'AUTO');
 
-# 전체 할인율 초기설정
+#전체할인율초기설정
 INSERT INTO `total_discount_rates`
 VALUES (1, 10);
