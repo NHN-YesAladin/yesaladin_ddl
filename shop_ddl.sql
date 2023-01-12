@@ -85,11 +85,12 @@ CREATE TABLE `point_codes`
 
 CREATE TABLE `point_histories`
 (
+    `id`	                BIGINT 	 NOT NULL AUTO_INCREMENT,
+    `amount`                BIGINT   NOT NULL,
     `created_datetime`      DATETIME NOT NULL,
     `member_id`             BIGINT   NOT NULL,
-    `amount`                BIGINT   NOT NULL,
     `point_history_code_id` INT      NOT NULL,
-    PRIMARY KEY (`created_datetime`, `member_id`),
+    PRIMARY KEY (`id`),
     CONSTRAINT `point_histories_member_ref` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`),
     CONSTRAINT `point_histories_point_code_ref` FOREIGN KEY (`point_history_code_id`) REFERENCES `point_codes` (`id`)
 );
