@@ -79,7 +79,7 @@ CREATE TABLE `member_grade_histories`
 CREATE TABLE `point_codes`
 (
     `id`         INT         NOT NULL,
-    `point_code` VARCHAR(15) NOT NULL,
+    `code`       VARCHAR(15) NOT NULL,
     PRIMARY KEY (`id`)
 );
 
@@ -89,10 +89,10 @@ CREATE TABLE `point_histories`
     `amount`                BIGINT   NOT NULL,
     `created_datetime`      DATETIME NOT NULL,
     `member_id`             BIGINT   NOT NULL,
-    `point_history_code_id` INT      NOT NULL,
+    `point_code_id`         INT      NOT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `point_histories_member_ref` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`),
-    CONSTRAINT `point_histories_point_code_ref` FOREIGN KEY (`point_history_code_id`) REFERENCES `point_codes` (`id`)
+    CONSTRAINT `point_histories_point_code_ref` FOREIGN KEY (`point_code_id`) REFERENCES `point_codes` (`id`)
 );
 
 CREATE TABLE `roles`
