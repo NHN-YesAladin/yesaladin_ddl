@@ -638,13 +638,15 @@ CREATE TABLE `payment_cancels`
 
 #회원등급
 INSERT INTO `member_grades`
-VALUES (1, 'WHITE', 100000, 1000);
+VALUES (1, 'WHITE', 0, 0);
 INSERT INTO `member_grades`
-VALUES (2, 'SILVER', 200000, 2000);
+VALUES (2, 'BRONZE', 100000, 1000);
 INSERT INTO `member_grades`
-VALUES (3, 'GOLD', 300000, 5000);
+VALUES (3, 'SILVER', 200000, 2000);
 INSERT INTO `member_grades`
-VALUES (4, 'PLATINUM', 500000, 10000);
+VALUES (4, 'GOLD', 300000, 5000);
+INSERT INTO `member_grades`
+VALUES (5, 'PLATINUM', 500000, 10000);
 
 #회원성별
 INSERT INTO `member_gender_codes`
