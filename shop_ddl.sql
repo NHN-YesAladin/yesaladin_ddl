@@ -1,5 +1,3 @@
-USE `yesaladin_shop_prod`;
-
 CREATE TABLE `accessors`
 (
     `id`              BIGINT      NOT NULL AUTO_INCREMENT,
@@ -77,18 +75,18 @@ CREATE TABLE `member_grade_histories`
 
 CREATE TABLE `point_codes`
 (
-    `id`         INT         NOT NULL,
-    `code`       VARCHAR(15) NOT NULL,
+    `id`   INT         NOT NULL,
+    `code` VARCHAR(15) NOT NULL,
     PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `point_histories`
 (
-    `id`	                BIGINT 	 NOT NULL AUTO_INCREMENT,
-    `amount`                BIGINT   NOT NULL,
-    `created_datetime`      DATETIME NOT NULL,
-    `member_id`             BIGINT   NOT NULL,
-    `point_code_id`         INT      NOT NULL,
+    `id`               BIGINT   NOT NULL AUTO_INCREMENT,
+    `amount`           BIGINT   NOT NULL,
+    `created_datetime` DATETIME NOT NULL,
+    `member_id`        BIGINT   NOT NULL,
+    `point_code_id`    INT      NOT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `point_histories_member_ref` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`),
     CONSTRAINT `point_histories_point_code_ref` FOREIGN KEY (`point_code_id`) REFERENCES `point_codes` (`id`)
@@ -380,21 +378,22 @@ CREATE TABLE `coupon_codes`
 
 CREATE TABLE `coupons`
 (
-    `id`                  BIGINT      NOT NULL AUTO_INCREMENT,
-    `name`                VARCHAR(50) NOT NULL,
-    `min_order_amount`    INT         NOT NULL,
-    `max_discount_amount` INT         NOT NULL,
-    `discount_amount`     INT         NULL,
-    `discount_rate`       INT         NULL,
-    `duplicatable`        BOOLEAN     NOT NULL,
-    `coupon_type_code_id` INT         NOT NULL,
-    `file_id`             BIGINT      NOT NULL,
-    `issuance_code_id`    INT         NOT NULL,
+    `id`                  BIGINT       NOT NULL AUTO_INCREMENT,
+    `name`                VARCHAR(50)  NOT NULL,
+    `min_order_amount`    INT          NOT NULL,
+    `max_discount_amount` INT          NOT NULL,
+    `discount_rate`       INT          NULL,
+    `discount_amount`     INT          NULL,
+    `duplicatable`        BOOLEAN      NOT NULL,
+    `file_uri`            VARCHAR(255) NULL,
+    `is_unlimited`        BOOLEAN      NOT NULL,
+    `coupon_type_code_id` INT          NOT NULL,
+    `issuance_code_id`    INT          NOT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `coupons_type_code_ref` FOREIGN KEY (`coupon_type_code_id`) REFERENCES `coupon_codes` (`id`),
-    CONSTRAINT `coupons_file_ref` FOREIGN KEY (`file_id`) REFERENCES `files` (`id`),
     CONSTRAINT `coupons_issuance_code_ref` FOREIGN KEY (`issuance_code_id`) REFERENCES `coupon_codes` (`id`)
 );
+
 
 CREATE TABLE `coupon_bound_codes`
 (
@@ -418,19 +417,47 @@ CREATE TABLE `coupon_bounds`
 
 CREATE TABLE `coupon_issuances`
 (
-    `id`              BIGINT      NOT NULL AUTO_INCREMENT,
-    `code`            VARCHAR(20) NOT NULL,
-    `is_used`         BOOLEAN     NOT NULL DEFAULT FALSE,
-    `issue_datetime`  DATETIME    NOT NULL,
-    `duration`        INT         NULL,
-    `expiration_date` DATE        NOT NULL,
-    `use_datetime`    DATETIME    NULL,
-    `member_id`       BIGINT      NOT NULL,
-    `coupon_id`       BIGINT      NOT NULL,
+    `id`               BIGINT      NOT NULL AUTO_INCREMENT,
+    `coupon_code`      VARCHAR(20) NOT NULL,
+    `created_datetime` DATETIME    NOT NULL,
+    `duration`         INT         NULL,
+    `expiration_date`  DATE        NOT NULL,
+    `is_given`         BOOLEAN     NOT NULL DEFAULT FALSE,
+    `coupon_id`        BIGINT      NOT NULL,
     PRIMARY KEY (`id`),
-    CONSTRAINT `coupon_issuances_code_unique` UNIQUE (`code`),
-    CONSTRAINT `coupon_issuances_member_ref` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`),
+    CONSTRAINT `coupon_issuances_code_unique` UNIQUE (`coupon_code`),
     CONSTRAINT `coupon_issuances_coupon_ref` FOREIGN KEY (`coupon_id`) REFERENCES `coupons` (`id`)
+);
+
+CREATE TABLE `coupon_event_codes`
+(
+    `id`          INT          NOT NULL AUTO_INCREMENT,
+    `event`       VARCHAR(100) NOT NULL,
+    `description` VARCHAR(255) NULL,
+    PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `coupon_events`
+(
+    `id`                   BIGINT NOT NULL AUTO_INCREMENT,
+    `coupon_event_code_id` INT    NOT NULL,
+    `coupon_id`            BIGINT NOT NULL,
+    PRIMARY KEY (`id`),
+    CONSTRAINT `coupon_events_code_ref` FOREIGN KEY (`coupon_event_code_id`) REFERENCES `coupon_event_codes` (`id`),
+    CONSTRAINT `coupon_events_coupon_ref` FOREIGN KEY (`coupon_id`) REFERENCES `coupons` (`id`)
+);
+
+CREATE TABLE `member_coupons`
+(
+    `id`               BIGINT   NOT NULL AUTO_INCREMENT,
+    `member_id`        BIGINT   NOT NULL,
+    `coupon_id`        BIGINT   NOT NULL,
+    `is_used`          BOOLEAN  NOT NULL DEFAULT FALSE,
+    `created_datetime` DATETIME NOT NULL,
+    `used_datetime`    DATETIME NULL,
+    PRIMARY KEY (`id`),
+    CONSTRAINT `member_coupons_member_ref` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`),
+    CONSTRAINT `member_coupons_coupon_issuance_ref` FOREIGN KEY (`coupon_id`) REFERENCES `coupon_issuances` (`id`)
 );
 
 CREATE TABLE `member_addresses`
@@ -518,7 +545,7 @@ CREATE TABLE `order_status_change_logs`
 
 CREATE TABLE `order_used_coupons`
 (
-    `member_order_id`           BIGINT NOT NULL,
+    `member_order_id`    BIGINT NOT NULL,
     `coupon_issuance_id` BIGINT NOT NULL,
     PRIMARY KEY (`member_order_id`, `coupon_issuance_id`),
     CONSTRAINT `order_used_coupons_member_order_ref` FOREIGN KEY (`member_order_id`) REFERENCES `member_orders` (`order_id`),
