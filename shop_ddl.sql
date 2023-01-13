@@ -52,7 +52,6 @@ CREATE TABLE `members`
     `withdrawal_date` DATE         NULL,
     `is_withdrawal`   BOOLEAN      NOT NULL DEFAULT FALSE,
     `is_blocked`      BOOLEAN      NOT NULL DEFAULT FALSE,
-    `point`           BIGINT       NOT NULL,
     `member_grade_id` INT          NOT NULL,
     `gender_code`     INT          NOT NULL,
     PRIMARY KEY (`id`),
@@ -680,6 +679,8 @@ INSERT INTO `point_codes`
 VALUES (1, 'USE');
 INSERT INTO `point_codes`
 VALUES (2, 'SAVE');
+INSERT INTO `point_codes`
+VALUES (3, 'SUM');
 
 #쿠폰코드
 INSERT INTO `coupon_codes`
