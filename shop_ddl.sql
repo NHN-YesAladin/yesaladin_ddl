@@ -1,3 +1,5 @@
+USE `yesaladin_shop_prod`;
+
 CREATE TABLE `accessors`
 (
     `id`              BIGINT      NOT NULL AUTO_INCREMENT,
@@ -11,9 +13,9 @@ CREATE TABLE `accessors`
 
 CREATE TABLE `files`
 (
-    `id`              BIGINT      NOT NULL AUTO_INCREMENT,
-    `url`             VARCHAR(180)NOT NULL,
-    `upload_datetime` DATETIME    NOT NULL DEFAULT NOW(),
+    `id`              BIGINT       NOT NULL AUTO_INCREMENT,
+    `url`             VARCHAR(180) NOT NULL,
+    `upload_datetime` DATETIME     NOT NULL DEFAULT NOW(),
     PRIMARY KEY (`id`),
     CONSTRAINT `files_url_unique` UNIQUE (`url`)
 );
@@ -369,95 +371,17 @@ CREATE TABLE `product_inquiries`
     CONSTRAINT `product_inquiries_member_ref` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`)
 );
 
-CREATE TABLE `coupon_codes`
-(
-    `id`          INT         NOT NULL,
-    `coupon_type` VARCHAR(15) NOT NULL,
-    PRIMARY KEY (`id`)
-);
-
-CREATE TABLE `coupons`
-(
-    `id`                  BIGINT       NOT NULL AUTO_INCREMENT,
-    `name`                VARCHAR(50)  NOT NULL,
-    `min_order_amount`    INT          NOT NULL,
-    `max_discount_amount` INT          NOT NULL,
-    `discount_rate`       INT          NULL,
-    `discount_amount`     INT          NULL,
-    `duplicatable`        BOOLEAN      NOT NULL,
-    `file_uri`            VARCHAR(255) NULL,
-    `is_unlimited`        BOOLEAN      NOT NULL,
-    `coupon_type_code_id` INT          NOT NULL,
-    `issuance_code_id`    INT          NOT NULL,
-    PRIMARY KEY (`id`),
-    CONSTRAINT `coupons_type_code_ref` FOREIGN KEY (`coupon_type_code_id`) REFERENCES `coupon_codes` (`id`),
-    CONSTRAINT `coupons_issuance_code_ref` FOREIGN KEY (`issuance_code_id`) REFERENCES `coupon_codes` (`id`)
-);
-
-
-CREATE TABLE `coupon_bound_codes`
-(
-    `id`     INT         NOT NULL,
-    `bounds` VARCHAR(30) NOT NULL,
-    PRIMARY KEY (`id`)
-);
-
-CREATE TABLE `coupon_bounds`
-(
-    `id`                   BIGINT NOT NULL,
-    `product_id`           BIGINT NULL,
-    `category_id`          BIGINT NULL,
-    `coupon_bound_code_id` INT    NOT NULL,
-    PRIMARY KEY (`id`),
-    CONSTRAINT `coupon_bounds_coupon_ref` FOREIGN KEY (`id`) REFERENCES `coupons` (`id`),
-    CONSTRAINT `coupon_bounds_product_ref` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`),
-    CONSTRAINT `coupon_bounds_category_ref` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`),
-    CONSTRAINT `coupon_bounds_code_ref` FOREIGN KEY (`coupon_bound_code_id`) REFERENCES `coupon_bound_codes` (`id`)
-);
-
-CREATE TABLE `coupon_issuances`
-(
-    `id`               BIGINT      NOT NULL AUTO_INCREMENT,
-    `coupon_code`      VARCHAR(20) NOT NULL,
-    `created_datetime` DATETIME    NOT NULL,
-    `duration`         INT         NULL,
-    `expiration_date`  DATE        NOT NULL,
-    `is_given`         BOOLEAN     NOT NULL DEFAULT FALSE,
-    `coupon_id`        BIGINT      NOT NULL,
-    PRIMARY KEY (`id`),
-    CONSTRAINT `coupon_issuances_code_unique` UNIQUE (`coupon_code`),
-    CONSTRAINT `coupon_issuances_coupon_ref` FOREIGN KEY (`coupon_id`) REFERENCES `coupons` (`id`)
-);
-
-CREATE TABLE `coupon_event_codes`
-(
-    `id`          INT          NOT NULL AUTO_INCREMENT,
-    `event`       VARCHAR(100) NOT NULL,
-    `description` VARCHAR(255) NULL,
-    PRIMARY KEY (`id`)
-);
-
-CREATE TABLE `coupon_events`
-(
-    `id`                   BIGINT NOT NULL AUTO_INCREMENT,
-    `coupon_event_code_id` INT    NOT NULL,
-    `coupon_id`            BIGINT NOT NULL,
-    PRIMARY KEY (`id`),
-    CONSTRAINT `coupon_events_code_ref` FOREIGN KEY (`coupon_event_code_id`) REFERENCES `coupon_event_codes` (`id`),
-    CONSTRAINT `coupon_events_coupon_ref` FOREIGN KEY (`coupon_id`) REFERENCES `coupons` (`id`)
-);
-
 CREATE TABLE `member_coupons`
 (
-    `id`               BIGINT   NOT NULL AUTO_INCREMENT,
-    `member_id`        BIGINT   NOT NULL,
-    `coupon_id`        BIGINT   NOT NULL,
-    `is_used`          BOOLEAN  NOT NULL DEFAULT FALSE,
-    `created_datetime` DATETIME NOT NULL,
-    `used_datetime`    DATETIME NULL,
+    `id`               BIGINT      NOT NULL AUTO_INCREMENT,
+    `member_id`        BIGINT      NOT NULL,
+    `coupon_code`      VARCHAR(20) NOT NULL,
+    `is_used`          BOOLEAN     NOT NULL DEFAULT FALSE,
+    `created_datetime` DATETIME    NOT NULL,
+    `used_datetime`    DATETIME    NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `member_coupons_member_ref` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`),
-    CONSTRAINT `member_coupons_coupon_issuance_ref` FOREIGN KEY (`coupon_id`) REFERENCES `coupon_issuances` (`id`)
+    CONSTRAINT `member_coupons_code_unique` UNIQUE (`coupon_code`)
 );
 
 CREATE TABLE `member_addresses`
@@ -545,11 +469,11 @@ CREATE TABLE `order_status_change_logs`
 
 CREATE TABLE `order_used_coupons`
 (
-    `member_order_id`    BIGINT NOT NULL,
-    `coupon_issuance_id` BIGINT NOT NULL,
-    PRIMARY KEY (`member_order_id`, `coupon_issuance_id`),
+    `member_order_id`  BIGINT NOT NULL,
+    `member_coupon_id` BIGINT NOT NULL,
+    PRIMARY KEY (`member_order_id`, `member_coupon_id`),
     CONSTRAINT `order_used_coupons_member_order_ref` FOREIGN KEY (`member_order_id`) REFERENCES `member_orders` (`order_id`),
-    CONSTRAINT `order_used_coupons_coupon_issuance_ref` FOREIGN KEY (`coupon_issuance_id`) REFERENCES `coupon_issuances` (`id`)
+    CONSTRAINT `order_used_coupons_coupon_issuance_ref` FOREIGN KEY (`member_coupon_id`) REFERENCES `member_coupons` (`id`)
 );
 
 CREATE TABLE `subscribes`
@@ -708,26 +632,6 @@ INSERT INTO `point_codes`
 VALUES (2, 'SAVE');
 INSERT INTO `point_codes`
 VALUES (3, 'SUM');
-
-#쿠폰코드
-INSERT INTO `coupon_codes`
-VALUES (1, 'FIXED_PRICE');
-INSERT INTO `coupon_codes`
-VALUES (2, 'FIXED_RATE');
-INSERT INTO `coupon_codes`
-VALUES (3, 'POINT');
-INSERT INTO `coupon_codes`
-VALUES (4, 'USER_DOWNLOAD');
-INSERT INTO `coupon_codes`
-VALUES (5, 'AUTO_ISSUANCE');
-
-#쿠폰적용범위코드
-INSERT INTO `coupon_bound_codes`
-VALUES (1, 'ALL');
-INSERT INTO `coupon_bound_codes`
-VALUES (2, 'CATEGORY');
-INSERT INTO `coupon_bound_codes`
-VALUES (3, 'INDIVIDUAL');
 
 #상품적립방식코드
 INSERT INTO `product_saving_method_codes`
