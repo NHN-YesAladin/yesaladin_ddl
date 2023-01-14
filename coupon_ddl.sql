@@ -19,7 +19,7 @@ CREATE TABLE `coupons`
     `coupon_type_code_id` INT          NOT NULL,
     `issuance_code_id`    INT          NOT NULL,
     `open_datetime`       DATETIME     NOT NULL DEFAULT NOW(),
-    `duration`            INT          NULL,
+    `can_be_overlapped`   INT          NULL,
     `expiration_date`     DATE         NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `coupons_type_code_ref` FOREIGN KEY (`coupon_type_code_id`) REFERENCES `coupon_codes` (`id`),
@@ -29,7 +29,7 @@ CREATE TABLE `coupons`
 CREATE TABLE `coupon_bound_codes`
 (
     `id`     INT         NOT NULL,
-    `bounds` VARCHAR(30) NOT NULL,
+    `bound`  VARCHAR(30) NOT NULL,
     PRIMARY KEY (`id`)
 );
 
@@ -94,4 +94,12 @@ VALUES (1, 'ALL');
 INSERT INTO `coupon_bound_codes`
 VALUES (2, 'CATEGORY');
 INSERT INTO `coupon_bound_codes`
-VALUES (3, 'INDIVIDUAL');
+VALUES (3, 'PRODUCT');
+
+#쿠폰이벤트코드
+INSERT INTO `coupon_event_codes`
+VALUES (1, 'SIGN_UP');
+INSERT INTO `coupon_event_codes`
+VALUES (2, 'BIRTHDAY');
+INSERT INTO `coupon_event_codes`
+VALUES (3, 'COUPON_OF_THE_MONTH');
