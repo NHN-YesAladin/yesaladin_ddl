@@ -245,7 +245,7 @@ CREATE TABLE `products`
     `quantity`                      BIGINT       NOT NULL,
     `preferential_show_ranking`     INT          NOT NULL,
     `thumbnail_file_id`             BIGINT       NOT NULL,
-    `ebook_file_id`                 BIGINT       NOT NULL,
+    `ebook_file_id`                 BIGINT       NULL,
     `product_type_code_id`          INT          NOT NULL,
     `discount_rate_id`              INT          NULL,
     `product_saving_method_code_id` INT          NOT NULL,
