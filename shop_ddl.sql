@@ -378,6 +378,7 @@ CREATE TABLE `member_coupons`
     `coupon_code`      VARCHAR(20) NOT NULL,
     `is_used`          BOOLEAN     NOT NULL DEFAULT FALSE,
     `created_datetime` DATETIME    NOT NULL,
+    `expiration_date`  DATE.       NOT NULL,
     `used_datetime`    DATETIME    NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `member_coupons_member_ref` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`),
