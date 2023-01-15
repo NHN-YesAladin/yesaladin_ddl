@@ -14,12 +14,12 @@ CREATE TABLE `coupons`
     `max_discount_amount` INT          NOT NULL,
     `discount_rate`       INT          NULL,
     `discount_amount`     INT          NULL,
-    `duplicatable`        BOOLEAN      NOT NULL,
+    `can_be_overlapped`   BOOLEAN      NOT NULL,
     `file_uri`            VARCHAR(255) NULL,
     `coupon_type_code_id` INT          NOT NULL,
     `issuance_code_id`    INT          NOT NULL,
     `open_datetime`       DATETIME     NOT NULL DEFAULT NOW(),
-    `can_be_overlapped`   INT          NULL,
+    `duration`            INT          NULL,
     `expiration_date`     DATE         NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `coupons_type_code_ref` FOREIGN KEY (`coupon_type_code_id`) REFERENCES `coupon_codes` (`id`),
@@ -28,8 +28,8 @@ CREATE TABLE `coupons`
 
 CREATE TABLE `coupon_bound_codes`
 (
-    `id`     INT         NOT NULL,
-    `bound`  VARCHAR(30) NOT NULL,
+    `id`    INT         NOT NULL,
+    `bound` VARCHAR(30) NOT NULL,
     PRIMARY KEY (`id`)
 );
 
@@ -46,12 +46,12 @@ CREATE TABLE `coupon_bounds`
 
 CREATE TABLE `coupon_issuances`
 (
-    `id`               BIGINT      NOT NULL AUTO_INCREMENT,
-    `coupon_code`      VARCHAR(20) NOT NULL,
-    `created_datetime` DATETIME    NOT NULL,
-    `is_given`         BOOLEAN     NOT NULL DEFAULT FALSE,
-    `coupon_id`        BIGINT      NOT NULL,
-    `expiration_date`  DATE        NOT NULL,
+    `id`               BIGINT   NOT NULL AUTO_INCREMENT,
+    `coupon_code`      CHAR(36) NOT NULL,
+    `created_datetime` DATETIME NOT NULL,
+    `is_given`         BOOLEAN  NOT NULL DEFAULT FALSE,
+    `coupon_id`        BIGINT   NOT NULL,
+    `expiration_date`  DATE     NOT NULL,
 
     PRIMARY KEY (`id`),
     CONSTRAINT `coupon_issuances_code_unique` UNIQUE (`coupon_code`),
@@ -97,9 +97,9 @@ INSERT INTO `coupon_bound_codes`
 VALUES (3, 'PRODUCT');
 
 #쿠폰이벤트코드
-INSERT INTO `coupon_event_codes`
+INSERT INTO `coupon_event_codes`(`id`, `event`)
 VALUES (1, 'SIGN_UP');
-INSERT INTO `coupon_event_codes`
+INSERT INTO `coupon_event_codes`(`id`, `event`)
 VALUES (2, 'BIRTHDAY');
-INSERT INTO `coupon_event_codes`
+INSERT INTO `coupon_event_codes`(`id`, `event`)
 VALUES (3, 'COUPON_OF_THE_MONTH');
