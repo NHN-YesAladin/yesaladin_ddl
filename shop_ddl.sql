@@ -642,17 +642,17 @@ VALUES (2, 'SELLING_PRICE');
 
 #상품유형코드
 INSERT INTO `product_type_codes`
-VALUES (1, 'BESTSELLER');
+VALUES (1, 'NONE');
 INSERT INTO `product_type_codes`
-VALUES (2, 'RECOMMENDATION');
+VALUES (2, 'BESTSELLER');
 INSERT INTO `product_type_codes`
-VALUES (3, 'NEWBOOK');
+VALUES (3, 'RECOMMENDATION');
 INSERT INTO `product_type_codes`
-VALUES (4, 'POPULARITY');
+VALUES (4, 'NEWBOOK');
 INSERT INTO `product_type_codes`
-VALUES (5, 'DISCOUNTS');
+VALUES (5, 'POPULARITY');
 INSERT INTO `product_type_codes`
-VALUES (6, 'NONE');
+VALUES (6, 'DISCOUNTS');
 
 #주문코드
 INSERT INTO `order_codes`
