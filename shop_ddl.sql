@@ -75,6 +75,30 @@ CREATE TABLE `member_grade_histories`
     CONSTRAINT `member_grade_histories_member_ref` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`)
 );
 
+CREATE TABLE `member_coupons`
+(
+    `id`               BIGINT      NOT NULL AUTO_INCREMENT,
+    `member_id`        BIGINT      NOT NULL,
+    `coupon_code`      VARCHAR(20) NOT NULL,
+    `is_used`          BOOLEAN     NOT NULL DEFAULT FALSE,
+    `created_datetime` DATETIME    NOT NULL,
+    `expiration_date`  DATE        NOT NULL,
+    `used_datetime`    DATETIME    NULL,
+    PRIMARY KEY (`id`),
+    CONSTRAINT `member_coupons_member_ref` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`),
+    CONSTRAINT `member_coupons_code_unique` UNIQUE (`coupon_code`)
+);
+
+CREATE TABLE `member_addresses`
+(
+    `id`         BIGINT       NOT NULL AUTO_INCREMENT,
+    `address`    VARCHAR(255) NOT NULL,
+    `is_default` BOOLEAN      NOT NULL,
+    `member_id`  BIGINT       NOT NULL,
+    PRIMARY KEY (`id`),
+    CONSTRAINT `member_addresses_member_ref` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`)
+);
+
 CREATE TABLE `point_codes`
 (
     `id`   INT         NOT NULL,
@@ -371,29 +395,6 @@ CREATE TABLE `product_inquiries`
     CONSTRAINT `product_inquiries_member_ref` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`)
 );
 
-CREATE TABLE `member_coupons`
-(
-    `id`               BIGINT      NOT NULL AUTO_INCREMENT,
-    `member_id`        BIGINT      NOT NULL,
-    `coupon_code`      VARCHAR(20) NOT NULL,
-    `is_used`          BOOLEAN     NOT NULL DEFAULT FALSE,
-    `created_datetime` DATETIME    NOT NULL,
-    `used_datetime`    DATETIME    NULL,
-    PRIMARY KEY (`id`),
-    CONSTRAINT `member_coupons_member_ref` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`),
-    CONSTRAINT `member_coupons_code_unique` UNIQUE (`coupon_code`)
-);
-
-CREATE TABLE `member_addresses`
-(
-    `id`         BIGINT       NOT NULL AUTO_INCREMENT,
-    `address`    VARCHAR(255) NOT NULL,
-    `is_default` BOOLEAN      NOT NULL,
-    `member_id`  BIGINT       NOT NULL,
-    PRIMARY KEY (`id`),
-    CONSTRAINT `member_addresses_member_ref` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`)
-);
-
 CREATE TABLE `order_codes`
 (
     `id`         INT         NOT NULL,
@@ -641,17 +642,17 @@ VALUES (2, 'SELLING_PRICE');
 
 #상품유형코드
 INSERT INTO `product_type_codes`
-VALUES (1, 'BESTSELLER');
+VALUES (1, 'NONE');
 INSERT INTO `product_type_codes`
-VALUES (2, 'RECOMMENDATION');
+VALUES (2, 'BESTSELLER');
 INSERT INTO `product_type_codes`
-VALUES (3, 'NEWBOOK');
+VALUES (3, 'RECOMMENDATION');
 INSERT INTO `product_type_codes`
-VALUES (4, 'POPULARITY');
+VALUES (4, 'NEWBOOK');
 INSERT INTO `product_type_codes`
-VALUES (5, 'DISCOUNTS');
+VALUES (5, 'POPULARITY');
 INSERT INTO `product_type_codes`
-VALUES (6, 'NONE');
+VALUES (6, 'DISCOUNTS');
 
 #주문코드
 INSERT INTO `order_codes`
