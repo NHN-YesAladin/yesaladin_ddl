@@ -75,6 +75,30 @@ CREATE TABLE `member_grade_histories`
     CONSTRAINT `member_grade_histories_member_ref` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`)
 );
 
+CREATE TABLE `member_coupons`
+(
+    `id`               BIGINT      NOT NULL AUTO_INCREMENT,
+    `member_id`        BIGINT      NOT NULL,
+    `coupon_code`      VARCHAR(20) NOT NULL,
+    `is_used`          BOOLEAN     NOT NULL DEFAULT FALSE,
+    `created_datetime` DATETIME    NOT NULL,
+    `expiration_date`  DATE        NOT NULL,
+    `used_datetime`    DATETIME    NULL,
+    PRIMARY KEY (`id`),
+    CONSTRAINT `member_coupons_member_ref` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`),
+    CONSTRAINT `member_coupons_code_unique` UNIQUE (`coupon_code`)
+);
+
+CREATE TABLE `member_addresses`
+(
+    `id`         BIGINT       NOT NULL AUTO_INCREMENT,
+    `address`    VARCHAR(255) NOT NULL,
+    `is_default` BOOLEAN      NOT NULL,
+    `member_id`  BIGINT       NOT NULL,
+    PRIMARY KEY (`id`),
+    CONSTRAINT `member_addresses_member_ref` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`)
+);
+
 CREATE TABLE `point_codes`
 (
     `id`   INT         NOT NULL,
@@ -369,30 +393,6 @@ CREATE TABLE `product_inquiries`
     PRIMARY KEY (`id`),
     CONSTRAINT `product_inquiries_product_ref` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`),
     CONSTRAINT `product_inquiries_member_ref` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`)
-);
-
-CREATE TABLE `member_coupons`
-(
-    `id`               BIGINT      NOT NULL AUTO_INCREMENT,
-    `member_id`        BIGINT      NOT NULL,
-    `coupon_code`      VARCHAR(20) NOT NULL,
-    `is_used`          BOOLEAN     NOT NULL DEFAULT FALSE,
-    `created_datetime` DATETIME    NOT NULL,
-    `expiration_date`  DATE.       NOT NULL,
-    `used_datetime`    DATETIME    NULL,
-    PRIMARY KEY (`id`),
-    CONSTRAINT `member_coupons_member_ref` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`),
-    CONSTRAINT `member_coupons_code_unique` UNIQUE (`coupon_code`)
-);
-
-CREATE TABLE `member_addresses`
-(
-    `id`         BIGINT       NOT NULL AUTO_INCREMENT,
-    `address`    VARCHAR(255) NOT NULL,
-    `is_default` BOOLEAN      NOT NULL,
-    `member_id`  BIGINT       NOT NULL,
-    PRIMARY KEY (`id`),
-    CONSTRAINT `member_addresses_member_ref` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`)
 );
 
 CREATE TABLE `order_codes`
