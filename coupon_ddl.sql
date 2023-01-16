@@ -35,12 +35,12 @@ CREATE TABLE `coupon_bound_codes`
 
 CREATE TABLE `coupon_bounds`
 (
-    `id`                   BIGINT      NOT NULL,
+    `coupon_id`            BIGINT      NOT NULL,
     `ISBN`                 VARCHAR(50) NOT NULL,
     `category_id`          BIGINT      NULL,
     `coupon_bound_code_id` INT         NOT NULL,
-    PRIMARY KEY (`id`),
-    CONSTRAINT `coupon_bounds_coupon_ref` FOREIGN KEY (`id`) REFERENCES `coupons` (`id`),
+    PRIMARY KEY (`coupon_id`),
+    CONSTRAINT `coupon_bounds_coupon_ref` FOREIGN KEY (`coupon_id`) REFERENCES `coupons` (`id`),
     CONSTRAINT `coupon_bounds_code_ref` FOREIGN KEY (`coupon_bound_code_id`) REFERENCES `coupon_bound_codes` (`id`)
 );
 
