@@ -1,3 +1,5 @@
+USE `yesaladin_coupon_prod`;
+
 CREATE TABLE `coupon_codes`
 (
     `id`          INT         NOT NULL,
@@ -5,25 +7,34 @@ CREATE TABLE `coupon_codes`
     PRIMARY KEY (`id`)
 );
 
+CREATE TABLE `coupon_issue_target_code`
+(
+    `id`           INT         NOT NULL,
+    `issue_target` VARCHAR(30) NOT NULL,
+    PRIMARY KEY (`id`)
+);
+
 CREATE TABLE `coupons`
 (
-    `id`                  BIGINT       NOT NULL AUTO_INCREMENT,
-    `name`                VARCHAR(50)  NOT NULL,
-    `quantity`            INT          NOT NULL DEFAULT -1,
-    `min_order_amount`    INT          NOT NULL,
-    `max_discount_amount` INT          NOT NULL,
-    `discount_rate`       INT          NULL,
-    `discount_amount`     INT          NULL,
-    `can_be_overlapped`   BOOLEAN      NOT NULL,
-    `file_uri`            VARCHAR(255) NULL,
-    `coupon_type_code_id` INT          NOT NULL,
-    `issuance_code_id`    INT          NOT NULL,
-    `open_datetime`       DATETIME     NOT NULL DEFAULT NOW(),
-    `duration`            INT          NULL,
-    `expiration_date`     DATE         NULL,
+    `id`                   BIGINT       NOT NULL AUTO_INCREMENT,
+    `name`                 VARCHAR(50)  NOT NULL,
+    `quantity`             INT          NOT NULL DEFAULT -1,
+    `min_order_amount`     INT          NOT NULL,
+    `max_discount_amount`  INT          NOT NULL,
+    `discount_rate`        INT          NULL,
+    `discount_amount`      INT          NULL,
+    `can_be_overlapped`    BOOLEAN      NOT NULL,
+    `file_uri`             VARCHAR(255) NULL,
+    `open_datetime`        DATETIME     NOT NULL DEFAULT NOW(),
+    `duration`             INT          NULL,
+    `expiration_date`      DATE         NULL,
+    `issuance_code_id`     INT          NOT NULL,
+    `coupon_type_code_id`  INT          NOT NULL,
+    `issue_target_code_id` INT          NOT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `coupons_type_code_ref` FOREIGN KEY (`coupon_type_code_id`) REFERENCES `coupon_codes` (`id`),
-    CONSTRAINT `coupons_issuance_code_ref` FOREIGN KEY (`issuance_code_id`) REFERENCES `coupon_codes` (`id`)
+    CONSTRAINT `coupons_issuance_code_ref` FOREIGN KEY (`issuance_code_id`) REFERENCES `coupon_codes` (`id`),
+    CONSTRAINT `coupons_issuance_target_code_ref` FOREIGN KEY (`issue_target_code_id`) REFERENCES `coupon_issue_target_code` (`id`)
 );
 
 CREATE TABLE `coupon_bound_codes`
@@ -38,7 +49,7 @@ CREATE TABLE `coupon_bounds`
     `coupon_id`            BIGINT      NOT NULL,
     `ISBN`                 VARCHAR(50) NOT NULL,
     `category_id`          BIGINT      NULL,
-    `coupon_bound_code_id` INT         NOT NULL,
+    `coupon_bound_code_id` INT         NOT NULL DEFAULT 1,
     PRIMARY KEY (`coupon_id`),
     CONSTRAINT `coupon_bounds_coupon_ref` FOREIGN KEY (`coupon_id`) REFERENCES `coupons` (`id`),
     CONSTRAINT `coupon_bounds_code_ref` FOREIGN KEY (`coupon_bound_code_id`) REFERENCES `coupon_bound_codes` (`id`)
@@ -78,28 +89,30 @@ CREATE TABLE `coupon_events`
 
 #쿠폰코드
 INSERT INTO `coupon_codes`
-VALUES (1, 'FIXED_PRICE');
-INSERT INTO `coupon_codes`
-VALUES (2, 'FIXED_RATE');
-INSERT INTO `coupon_codes`
-VALUES (3, 'POINT');
-INSERT INTO `coupon_codes`
-VALUES (4, 'USER_DOWNLOAD');
-INSERT INTO `coupon_codes`
-VALUES (5, 'AUTO_ISSUANCE');
+VALUES (1, 'FIXED_PRICE'),
+       (2, 'FIXED_RATE'),
+       (3, 'POINT'),
+       (4, 'USER_DOWNLOAD'),
+       (5, 'AUTO_ISSUANCE');
 
 #쿠폰적용범위코드
 INSERT INTO `coupon_bound_codes`
-VALUES (1, 'ALL');
-INSERT INTO `coupon_bound_codes`
-VALUES (2, 'CATEGORY');
-INSERT INTO `coupon_bound_codes`
-VALUES (3, 'PRODUCT');
+VALUES (1, 'ALL'),
+       (2, 'CATEGORY'),
+       (3, 'PRODUCT');
 
 #쿠폰이벤트코드
 INSERT INTO `coupon_event_codes`(`id`, `event`)
-VALUES (1, 'SIGN_UP');
-INSERT INTO `coupon_event_codes`(`id`, `event`)
-VALUES (2, 'BIRTHDAY');
-INSERT INTO `coupon_event_codes`(`id`, `event`)
-VALUES (3, 'COUPON_OF_THE_MONTH');
+VALUES (1, 'SIGN_UP'),
+       (2, 'BIRTHDAY'),
+       (3, 'COUPON_OF_THE_MONTH'),
+       (4, 'MEMBER_GRADE');
+
+#쿠폰발급대상코드
+INSERT INTO `coupon_issue_target_code`(`id`, `issue_target`)
+VALUES (1, 'ALL'),
+       (2, 'MEMBER_GRADE_WHITE'),
+       (3, 'MEMBER_GRADE_BRONZE'),
+       (4, 'MEMBER_GRADE_SILVER'),
+       (5, 'MEMBER_GRADE_GOLD'),
+       (6, 'MEMBER_GRADE_PLATINUM');
