@@ -528,34 +528,40 @@ CREATE TABLE `payment_codes`
     PRIMARY KEY (`id`)
 );
 
+CREATE TABLE `card_acquirer_codes` (
+	`id`	int	NOT NULL,
+	`code`	varchar(3)	NOT NULL,
+	`acquirer_name`	varchar(30)	NOT NULL
+);
+
 CREATE TABLE `payments`
 (
     `id`                   VARCHAR(200) NOT NULL,
     `last_transaction_key` VARCHAR(64)  NOT NULL,
     `order_name`           VARCHAR(100) NOT NULL,
-    `method`               VARCHAR(50)  NOT NULL,
     `currency`             CHAR(3)      NOT NULL,
     `total_amount`         BIGINT       NOT NULL,
     `balance_amount`       BIGINT       NOT NULL,
     `supplied_amount`      BIGINT       NOT NULL,
     `tax_free_amount`      BIGINT       NOT NULL,
     `vat`                  BIGINT       NOT NULL,
-    `status`               VARCHAR(20)  NOT NULL,
     `requested_datetime`   DATETIME     NOT NULL,
     `approved_datetime`    DATETIME     NOT NULL,
     `order_id`             BIGINT       NOT NULL,
     `payment_code_id`      INT          NOT NULL,
+    `method_code_id`      INT          NOT NULL,
+    `status_code_id`      INT          NOT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `payments_order_ref` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`),
-    CONSTRAINT `payments_code_id` FOREIGN KEY (`payment_code_id`) REFERENCES `payment_codes` (`id`)
+    CONSTRAINT `payments_payment_code_ref` FOREIGN KEY (`payment_code_id`) REFERENCES `payment_codes` (`id`),
+    CONSTRAINT `payments_method_code_ref` FOREIGN KEY (`method_code_id`) REFERENCES `payment_codes` (`id`),
+    CONSTRAINT `payments_status_code_ref` FOREIGN KEY (`status_code_id`) REFERENCES `payment_codes` (`id`)
 );
 
 CREATE TABLE `payment_cards`
 (
     `payment_id`              VARCHAR(200) NOT NULL,
     `amount`                  BIGINT       NOT NULL,
-    `issuer_code`             VARCHAR(50)  NOT NULL,
-    `acquirer_code`           VARCHAR(50)  NOT NULL,
     `number`                  VARCHAR(20)  NOT NULL,
     `installment_plan_months` INT          NOT NULL,
     `approve_no`              VARCHAR(8)   NOT NULL,
@@ -565,10 +571,14 @@ CREATE TABLE `payment_cards`
     `interest_payer`          VARCHAR(20)  NOT NULL,
     `card_code_id`            INT          NOT NULL,
     `owner_code_id`           INT          NOT NULL,
+    `issuer_code_id`           INT          NOT NULL,
+    `acquirer_code_id`           INT          NOT NULL,
     PRIMARY KEY (`payment_id`),
     CONSTRAINT `payment_cards_payment_ref` FOREIGN KEY (`payment_id`) REFERENCES `payments` (`id`),
     CONSTRAINT `payment_cards_card_code_ref` FOREIGN KEY (`card_code_id`) REFERENCES `payment_codes` (`id`),
-    CONSTRAINT `payment_cards_owner_code_ref` FOREIGN KEY (`owner_code_id`) REFERENCES `payment_codes` (`id`)
+    CONSTRAINT `payment_cards_owner_code_ref` FOREIGN KEY (`owner_code_id`) REFERENCES `payment_codes` (`id`),
+    CONSTRAINT `payment_cards_issuer_code_ref` FOREIGN KEY (`issuer_code_id`) REFERENCES `card_acquirer_codes` (`id`),
+    CONSTRAINT `payment_cards_acquirer_code_ref` FOREIGN KEY (`acquirer_code_id`) REFERENCES `card_acquirer_codes` (`id`)
 );
 
 CREATE TABLE `payment_cancels`
@@ -689,6 +699,84 @@ INSERT INTO `payment_codes`
 VALUES (5, 'NORMAL');
 INSERT INTO `payment_codes`
 VALUES (6, 'AUTO');
+INSERT INTO `payment_codes`
+VALUES (7, '카드'); #한글 맞음
+INSERT INTO `payment_codes`
+VALUES (8, '간편결제'); #한글 맞음
+INSERT INTO `payment_codes`
+VALUES (9, 'READY');
+INSERT INTO `payment_codes`
+VALUES (10, 'DONE');
+INSERT INTO `payment_codes`
+VALUES (11, 'CANCELED');
+INSERT INTO `payment_codes`
+VALUES (12, 'PARTIAL_CANCELED');
+INSERT INTO `payment_codes`
+VALUES (13, 'ABORTED');
+INSERT INTO `payment_codes`
+VALUES (14, 'COMPLETED');
+
+#카드사 코드
+INSERT INTO `card_acquirer_codes`
+VALUES (1, '3K' , 'BC카드-IBK');
+INSERT INTO `card_acquirer_codes`
+VALUES (2, '46' , '광주은행');
+INSERT INTO `card_acquirer_codes`
+VALUES (3, '71' , '롯데카드');
+INSERT INTO `card_acquirer_codes`
+VALUES (4, '30' , 'KDB산업은행');
+INSERT INTO `card_acquirer_codes`
+VALUES (5, '31' , 'BC카드');
+INSERT INTO `card_acquirer_codes`
+VALUES (6, '51' , '삼성카드');
+INSERT INTO `card_acquirer_codes`
+VALUES (7, '38' , '새마을금고');
+INSERT INTO `card_acquirer_codes`
+VALUES (8, '41' , '신한카드');
+INSERT INTO `card_acquirer_codes`
+VALUES (9, '62' , '신협');
+INSERT INTO `card_acquirer_codes`
+VALUES (10, '36' , '씨티카드');
+INSERT INTO `card_acquirer_codes`
+VALUES (11, '33' , '우리카드');
+INSERT INTO `card_acquirer_codes`
+VALUES (12, '37' , '우체국예금보험');
+INSERT INTO `card_acquirer_codes`
+VALUES (13, '39' , '저축은행중앙회');
+INSERT INTO `card_acquirer_codes`
+VALUES (14, '35' , '전북은행');
+INSERT INTO `card_acquirer_codes`
+VALUES (15, '42' , '제주은행');
+INSERT INTO `card_acquirer_codes`
+VALUES (16, '15' , '카카오뱅크');
+INSERT INTO `card_acquirer_codes`
+VALUES (17, '3A' , '케이뱅크');
+INSERT INTO `card_acquirer_codes`
+VALUES (18, '24' , '토스뱅크');
+INSERT INTO `card_acquirer_codes`
+VALUES (19, '21' , '하나카드');
+INSERT INTO `card_acquirer_codes`
+VALUES (20, '61' , '현대카드');
+INSERT INTO `card_acquirer_codes`
+VALUES (21, '11' , 'KB국민카드');
+INSERT INTO `card_acquirer_codes`
+VALUES (22, '91' , 'NH농협카드');
+INSERT INTO `card_acquirer_codes`
+VALUES (23, '34' , 'Sh수협은행');
+INSERT INTO `card_acquirer_codes`
+VALUES (24, '6D' , '다이너스 클럽');
+INSERT INTO `card_acquirer_codes`
+VALUES (25, '6I' , '디스커버');
+INSERT INTO `card_acquirer_codes`
+VALUES (26, '4M' , '마스터카드');
+INSERT INTO `card_acquirer_codes`
+VALUES (27, '3C' , '유니온페이');
+INSERT INTO `card_acquirer_codes`
+VALUES (28, '7A' , '아메리칸 익스프레스');
+INSERT INTO `card_acquirer_codes`
+VALUES (29, '4J' , 'JCB');
+INSERT INTO `card_acquirer_codes`
+VALUES (30, '4V' , 'VISA');
 
 #전체할인율초기설정
 INSERT INTO `total_discount_rates`
