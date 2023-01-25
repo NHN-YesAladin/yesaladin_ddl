@@ -1,5 +1,3 @@
-USE `yesaladin_shop_prod`;
-
 CREATE TABLE `accessors`
 (
     `id`              BIGINT      NOT NULL AUTO_INCREMENT,
@@ -53,8 +51,8 @@ CREATE TABLE `members`
     `is_withdrawal`   BOOLEAN      NOT NULL DEFAULT FALSE,
     `is_blocked`      BOOLEAN      NOT NULL DEFAULT FALSE,
     `blocked_reason`  VARCHAR(255) NULL,
-    `blocked_date`    DATE	   NULL,
-    `unblocked_date`  DATE	   NULL,
+    `blocked_date`    DATE         NULL,
+    `unblocked_date`  DATE         NULL,
     `member_grade_id` INT          NOT NULL,
     `gender_code`     INT          NOT NULL,
     PRIMARY KEY (`id`),
@@ -80,13 +78,9 @@ CREATE TABLE `member_grade_histories`
 
 CREATE TABLE `member_coupons`
 (
-    `id`               BIGINT      NOT NULL AUTO_INCREMENT,
-    `member_id`        BIGINT      NOT NULL,
-    `coupon_code`      VARCHAR(20) NOT NULL,
-    `is_used`          BOOLEAN     NOT NULL DEFAULT FALSE,
-    `created_datetime` DATETIME    NOT NULL,
-    `expiration_date`  DATE        NOT NULL,
-    `used_datetime`    DATETIME    NULL,
+    `id`          BIGINT      NOT NULL AUTO_INCREMENT,
+    `member_id`   BIGINT      NOT NULL,
+    `coupon_code` VARCHAR(20) NOT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `member_coupons_member_ref` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`),
     CONSTRAINT `member_coupons_code_unique` UNIQUE (`coupon_code`)
@@ -531,10 +525,11 @@ CREATE TABLE `payment_codes`
     PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `payment_card_acquirer_codes` (
-	`id`	int	NOT NULL,
-	`code`	varchar(3)	NOT NULL,
-	`acquirer_name`	varchar(30)	NOT NULL,
+CREATE TABLE `payment_card_acquirer_codes`
+(
+    `id`            INT         NOT NULL,
+    `code`          VARCHAR(3)  NOT NULL,
+    `acquirer_name` VARCHAR(30) NOT NULL,
     PRIMARY KEY (`id`)
 );
 
@@ -705,9 +700,9 @@ VALUES (5, 'NORMAL');
 INSERT INTO `payment_codes`
 VALUES (6, 'BILLING');
 INSERT INTO `payment_codes`
-VALUES (7, 'CARD'); 
+VALUES (7, 'CARD');
 INSERT INTO `payment_codes`
-VALUES (8, 'SIMPLE_PAY'); 
+VALUES (8, 'SIMPLE_PAY');
 INSERT INTO `payment_codes`
 VALUES (9, 'READY');
 INSERT INTO `payment_codes`
@@ -723,65 +718,65 @@ VALUES (14, 'COMPLETED');
 
 #카드사 코드
 INSERT INTO `payment_card_acquirer_codes`
-VALUES (1, '3K' , 'BC카드-IBK');
+VALUES (1, '3K', 'BC카드-IBK');
 INSERT INTO `payment_card_acquirer_codes`
-VALUES (2, '46' , '광주은행');
+VALUES (2, '46', '광주은행');
 INSERT INTO `payment_card_acquirer_codes`
-VALUES (3, '71' , '롯데카드');
+VALUES (3, '71', '롯데카드');
 INSERT INTO `payment_card_acquirer_codes`
-VALUES (4, '30' , 'KDB산업은행');
+VALUES (4, '30', 'KDB산업은행');
 INSERT INTO `payment_card_acquirer_codes`
-VALUES (5, '31' , 'BC카드');
+VALUES (5, '31', 'BC카드');
 INSERT INTO `payment_card_acquirer_codes`
-VALUES (6, '51' , '삼성카드');
+VALUES (6, '51', '삼성카드');
 INSERT INTO `payment_card_acquirer_codes`
-VALUES (7, '38' , '새마을금고');
+VALUES (7, '38', '새마을금고');
 INSERT INTO `payment_card_acquirer_codes`
-VALUES (8, '41' , '신한카드');
+VALUES (8, '41', '신한카드');
 INSERT INTO `payment_card_acquirer_codes`
-VALUES (9, '62' , '신협');
+VALUES (9, '62', '신협');
 INSERT INTO `payment_card_acquirer_codes`
-VALUES (10, '36' , '씨티카드');
+VALUES (10, '36', '씨티카드');
 INSERT INTO `payment_card_acquirer_codes`
-VALUES (11, '33' , '우리카드');
+VALUES (11, '33', '우리카드');
 INSERT INTO `payment_card_acquirer_codes`
-VALUES (12, '37' , '우체국예금보험');
+VALUES (12, '37', '우체국예금보험');
 INSERT INTO `payment_card_acquirer_codes`
-VALUES (13, '39' , '저축은행중앙회');
+VALUES (13, '39', '저축은행중앙회');
 INSERT INTO `payment_card_acquirer_codes`
-VALUES (14, '35' , '전북은행');
+VALUES (14, '35', '전북은행');
 INSERT INTO `payment_card_acquirer_codes`
-VALUES (15, '42' , '제주은행');
+VALUES (15, '42', '제주은행');
 INSERT INTO `payment_card_acquirer_codes`
-VALUES (16, '15' , '카카오뱅크');
+VALUES (16, '15', '카카오뱅크');
 INSERT INTO `payment_card_acquirer_codes`
-VALUES (17, '3A' , '케이뱅크');
+VALUES (17, '3A', '케이뱅크');
 INSERT INTO `payment_card_acquirer_codes`
-VALUES (18, '24' , '토스뱅크');
+VALUES (18, '24', '토스뱅크');
 INSERT INTO `payment_card_acquirer_codes`
-VALUES (19, '21' , '하나카드');
+VALUES (19, '21', '하나카드');
 INSERT INTO `payment_card_acquirer_codes`
-VALUES (20, '61' , '현대카드');
+VALUES (20, '61', '현대카드');
 INSERT INTO `payment_card_acquirer_codes`
-VALUES (21, '11' , 'KB국민카드');
+VALUES (21, '11', 'KB국민카드');
 INSERT INTO `payment_card_acquirer_codes`
-VALUES (22, '91' , 'NH농협카드');
+VALUES (22, '91', 'NH농협카드');
 INSERT INTO `payment_card_acquirer_codes`
-VALUES (23, '34' , 'Sh수협은행');
+VALUES (23, '34', 'Sh수협은행');
 INSERT INTO `payment_card_acquirer_codes`
-VALUES (24, '6D' , '다이너스 클럽');
+VALUES (24, '6D', '다이너스 클럽');
 INSERT INTO `payment_card_acquirer_codes`
-VALUES (25, '6I' , '디스커버');
+VALUES (25, '6I', '디스커버');
 INSERT INTO `payment_card_acquirer_codes`
-VALUES (26, '4M' , '마스터카드');
+VALUES (26, '4M', '마스터카드');
 INSERT INTO `payment_card_acquirer_codes`
-VALUES (27, '3C' , '유니온페이');
+VALUES (27, '3C', '유니온페이');
 INSERT INTO `payment_card_acquirer_codes`
-VALUES (28, '7A' , '아메리칸 익스프레스');
+VALUES (28, '7A', '아메리칸 익스프레스');
 INSERT INTO `payment_card_acquirer_codes`
-VALUES (29, '4J' , 'JCB');
+VALUES (29, '4J', 'JCB');
 INSERT INTO `payment_card_acquirer_codes`
-VALUES (30, '4V' , 'VISA');
+VALUES (30, '4V', 'VISA');
 
 #전체할인율초기설정
 INSERT INTO `total_discount_rates`
