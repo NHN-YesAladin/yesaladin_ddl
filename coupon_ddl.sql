@@ -11,7 +11,7 @@ CREATE TABLE `coupons`
 (
     `id`                  BIGINT       NOT NULL AUTO_INCREMENT,
     `name`                VARCHAR(50)  NOT NULL,
-    `quantity`            INT          NOT NULL DEFAULT -1,
+    `is_unlimited`        BOOLEAN      NOT NULL,
     `file_uri`            VARCHAR(255) NULL,
     `duration`            INT          NULL,
     `expiration_date`     DATE         NULL,
