@@ -91,6 +91,7 @@ CREATE TABLE `member_addresses`
     `id`         BIGINT       NOT NULL AUTO_INCREMENT,
     `address`    VARCHAR(255) NOT NULL,
     `is_default` BOOLEAN      NOT NULL,
+    `is_deleted` BOOLEAN      NOT NULL,
     `member_id`  BIGINT       NOT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `member_addresses_member_ref` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`)
