@@ -67,17 +67,35 @@ CREATE TABLE `coupon_bounds`
     CONSTRAINT `coupon_bounds_code_ref` FOREIGN KEY (`coupon_bound_code_id`) REFERENCES `coupon_bound_codes` (`id`)
 );
 
+CREATE TABLE `coupon_given_state_code`
+(
+    `id`    INT         NOT NULL,
+    `state` VARCHAR(30) NOT NULL,
+    PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `coupon_usage_state_code`
+(
+    `id`    INT         NOT NULL,
+    `state` VARCHAR(30) NOT NULL,
+    PRIMARY KEY (`id`)
+);
+
 CREATE TABLE `issued_coupons`
 (
-    `id`               BIGINT   NOT NULL AUTO_INCREMENT,
-    `coupon_code`      CHAR(36) NOT NULL,
-    `created_datetime` DATETIME NOT NULL,
-    `is_given`         BOOLEAN  NOT NULL DEFAULT FALSE,
-    `coupon_id`        BIGINT   NOT NULL,
-    `expiration_date`  DATE     NOT NULL,
-
+    `id`                         BIGINT   NOT NULL AUTO_INCREMENT,
+    `coupon_code`                CHAR(36) NOT NULL,
+    `created_datetime`           DATETIME NOT NULL,
+    `expiration_date`            DATE     NOT NULL,
+    `given_datetime`             DATETIME NULL,
+    `used_datetime`              DATETIME NULL,
+    `coupon_id`                  BIGINT   NOT NULL,
+    `coupon_given_state_code_id` INT      NOT NULL,
+    `coupon_usage_state_code_id` INT      NOT NULL,
     PRIMARY KEY (`id`),
-    CONSTRAINT `issued_coupons_coupon_ref` FOREIGN KEY (`coupon_id`) REFERENCES `coupons` (`id`)
+    CONSTRAINT `issued_coupons_coupon_ref` FOREIGN KEY (`coupon_id`) REFERENCES `coupons` (`id`),
+    CONSTRAINT `issued_coupons_coupon_given_state_code_ref` FOREIGN KEY (`coupon_given_state_code_id`) REFERENCES `coupon_given_state_code` (`id`),
+    CONSTRAINT `issued_coupons_coupon_usage_state_code_ref` FOREIGN KEY (`coupon_usage_state_code_id`) REFERENCES `coupon_usage_state_code` (`id`)
 );
 
 CREATE TABLE `trigger_type_codes`
@@ -128,4 +146,13 @@ VALUES (1, 'SIGN_UP'),
        (103, 'MEMBER_GRADE_SILVER'),
        (104, 'MEMBER_GRADE_GOLD'),
        (105, 'MEMBER_GRADE_PLATINUM');
-       
+
+INSERT INTO `coupon_given_state_code`
+VALUES (1, 'NOT_GIVEN'),
+       (2, 'PENDING_GIVE'),
+       (3, 'GIVEN');
+
+INSERT INTO `coupon_usage_state_code`
+VALUES (1, 'NOT_USED'),
+       (2, 'PENDING_USE'),
+       (3, 'USED');
