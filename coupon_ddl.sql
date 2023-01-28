@@ -108,15 +108,27 @@ CREATE TABLE `trigger_type_codes`
 
 CREATE TABLE `triggers`
 (
-    `id`              INT      NOT NULL AUTO_INCREMENT,
-    `trigger_code_id` INT      NOT NULL,
-    `coupon_id`       BIGINT   NOT NULL,
-    `group_code`      CHAR(36) NOT NULL,
-    `is_activated`    BOOLEAN  NOT NULL,
+    `id`              INT    NOT NULL AUTO_INCREMENT,
+    `trigger_code_id` INT    NOT NULL,
+    `coupon_id`       BIGINT NOT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `triggers_code_ref` FOREIGN KEY (`trigger_code_id`) REFERENCES `trigger_type_codes` (`id`),
     CONSTRAINT `triggers_coupon_ref` FOREIGN KEY (`coupon_id`) REFERENCES `coupons` (`id`)
 );
+
+CREATE TABLE `coupon_group`
+(
+    `id`               BIGINT   NOT NULL AUTO_INCREMENT,
+    `group_code`       CHAR(36) NOT NULL,
+    `created_datetime` DATETIME NOT NULL,
+    `trigger_code_id`  INT      NOT NULL,
+    `coupon_id`        BIGINT   NOT NULL,
+    PRIMARY KEY (`id`),
+    CONSTRAINT `coupon_group_trigger_code_ref` FOREIGN KEY (`trigger_code_id`) REFERENCES `trigger_type_codes` (`id`),
+    CONSTRAINT `coupon_group_coupon_ref` FOREIGN KEY (`coupon_id`) REFERENCES `coupons` (`id`)
+);
+
+
 
 CREATE TABLE `coupon_of_the_month_policy`
 (
