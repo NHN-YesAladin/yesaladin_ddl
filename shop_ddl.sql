@@ -78,9 +78,10 @@ CREATE TABLE `member_grade_histories`
 
 CREATE TABLE `member_coupons`
 (
-    `id`          BIGINT      NOT NULL AUTO_INCREMENT,
-    `member_id`   BIGINT      NOT NULL,
-    `coupon_code` VARCHAR(20) NOT NULL,
+    `id`                BIGINT      NOT NULL AUTO_INCREMENT,
+    `member_id`         BIGINT      NOT NULL,
+    `coupon_code`       VARCHAR(20) NOT NULL,
+    `coupon_group_code` CHAR(36)    NOT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `member_coupons_member_ref` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`),
     CONSTRAINT `member_coupons_code_unique` UNIQUE (`coupon_code`)
