@@ -15,6 +15,7 @@ CREATE TABLE `coupons`
     `file_uri`            VARCHAR(255) NULL,
     `duration`            INT          NULL,
     `expiration_date`     DATE         NULL,
+    `created_datetime`    DATETIME     NOT NULL,
     `coupon_type_code_id` INT          NOT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `coupons_type_code_ref` FOREIGN KEY (`coupon_type_code_id`) REFERENCES `coupon_type_codes` (`id`)
