@@ -333,13 +333,13 @@ CREATE TABLE `product_tags`
     CONSTRAINT `product_tags_tag_ref` FOREIGN KEY (`tag_id`) REFERENCES `tags` (`id`)
 );
 
-CREATE TABLE `related_products`
+CREATE TABLE `relations`
 (
     `product_main_id` BIGINT NOT NULL,
     `product_sub_id`  BIGINT NOT NULL,
     PRIMARY KEY (`product_main_id`, `product_sub_id`),
-    CONSTRAINT `related_products_main_ref` FOREIGN KEY (`product_main_id`) REFERENCES `products` (`id`),
-    CONSTRAINT `related_products_sub_ref` FOREIGN KEY (`product_sub_id`) REFERENCES `products` (`id`)
+    CONSTRAINT `relations_main_ref` FOREIGN KEY (`product_main_id`) REFERENCES `products` (`id`),
+    CONSTRAINT `relations_sub_ref` FOREIGN KEY (`product_sub_id`) REFERENCES `products` (`id`)
 );
 
 CREATE TABLE `authors`
