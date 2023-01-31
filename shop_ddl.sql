@@ -105,6 +105,13 @@ CREATE TABLE `point_codes`
     PRIMARY KEY (`id`)
 );
 
+CREATE TABLE `point_reason_codes`
+(
+    `id`        INT         NOT NULL,
+    `reason`    VARCHAR(20) NOT NULL,
+    PRIMARY KEY(`id`)
+);
+
 CREATE TABLE `point_histories`
 (
     `id`               BIGINT   NOT NULL AUTO_INCREMENT,
@@ -112,9 +119,11 @@ CREATE TABLE `point_histories`
     `created_datetime` DATETIME NOT NULL,
     `member_id`        BIGINT   NOT NULL,
     `point_code_id`    INT      NOT NULL,
+    `point_reason_code_id` INT  NOT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `point_histories_member_ref` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`),
-    CONSTRAINT `point_histories_point_code_ref` FOREIGN KEY (`point_code_id`) REFERENCES `point_codes` (`id`)
+    CONSTRAINT `point_histories_point_code_ref` FOREIGN KEY (`point_code_id`) REFERENCES `point_codes` (`id`),
+    CONSTRAINT `point_histories_point_reason_code_ref` FOREIGN KEY (`point_reason_code_id`) REFERENCES `point_reason_code` (`id`)
 );
 
 CREATE TABLE `roles`
@@ -412,6 +421,7 @@ CREATE TABLE `orders`
     `used_point`              BIGINT       NOT NULL,
     `shipping_fee`            INT          NOT NULL,
     `wrapping_fee`            INT          NOT NULL,
+    `total_amount`            BIGINT       NOT NULL,
     `order_code_id`           INT          NOT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `orders_order_number_unique` UNIQUE (`order_number`)
@@ -646,6 +656,22 @@ VALUES (2, 'SAVE');
 INSERT INTO `point_codes`
 VALUES (3, 'SUM');
 
+#포인트사유코드
+INSERT INTO `point_reason_codes`
+VALUES (1, 'SAVE_ORDER');
+INSERT INTO `point_reason_codes`
+VALUES (2, 'SAVE_ORDER_CANCEL');
+INSERT INTO `point_reason_codes`
+VALUES (3, 'SAVE_ORDER_REFUND');
+INSERT INTO `point_reason_codes`
+VALUES (4, 'SAVE_COUPON');
+INSERT INTO `point_reason_codes`
+VALUES (5, 'SAVE_PRESENT');
+INSERT INTO `point_reason_codes`
+VALUES (6, 'USE_ORDER');
+INSERT INTO `point_reason_codes`
+VALUES (7, 'USE_PRESENT');
+
 #상품적립방식코드
 INSERT INTO `product_saving_method_codes`
 VALUES (1, 'ACTUAL_PURCHASE_PRICE');
@@ -687,6 +713,8 @@ INSERT INTO `order_status_codes`
 VALUES (5, 'COMPLETE');
 INSERT INTO `order_status_codes`
 VALUES (6, 'REFUND');
+INSERT INTO `order_status_codes`
+VALUES (7, 'CANCEL');
 
 #결제코드
 INSERT INTO `payment_codes`
