@@ -671,6 +671,8 @@ INSERT INTO `point_reason_codes`
 VALUES (6, 'USE_ORDER');
 INSERT INTO `point_reason_codes`
 VALUES (7, 'USE_PRESENT');
+INSERT INTO `point_reason_codes`
+VALUES (8, 'SUM');
 
 #상품적립방식코드
 INSERT INTO `product_saving_method_codes`
