@@ -123,7 +123,7 @@ CREATE TABLE `point_histories`
     PRIMARY KEY (`id`),
     CONSTRAINT `point_histories_member_ref` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`),
     CONSTRAINT `point_histories_point_code_ref` FOREIGN KEY (`point_code_id`) REFERENCES `point_codes` (`id`),
-    CONSTRAINT `point_histories_point_reason_code_ref` FOREIGN KEY (`point_reason_code_id`) REFERENCES `point_reason_code` (`id`)
+    CONSTRAINT `point_histories_point_reason_code_ref` FOREIGN KEY (`point_reason_code_id`) REFERENCES `point_reason_codes` (`id`)
 );
 
 CREATE TABLE `roles`
