@@ -156,6 +156,7 @@ VALUES (1, 'ALL'),
 INSERT INTO `trigger_type_codes`
 VALUES (1, 'SIGN_UP'),
        (2, 'BIRTHDAY'),
+       (3, 'COUPON_OF_THE_MONTH'),
        (101, 'MEMBER_GRADE_WHITE'),
        (102, 'MEMBER_GRADE_BRONZE'),
        (103, 'MEMBER_GRADE_SILVER'),
