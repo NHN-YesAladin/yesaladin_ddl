@@ -253,15 +253,15 @@ CREATE TABLE `total_discount_rates`
 CREATE TABLE `subscribe_products`
 (
     `id`   BIGINT     NOT NULL AUTO_INCREMENT,
-    `ISSN` VARCHAR(9) NOT NULL,
+    `issn` VARCHAR(9) NOT NULL,
     PRIMARY KEY (`id`),
-    CONSTRAINT `subscribe_products_issn_unique` UNIQUE (`ISSN`)
+    CONSTRAINT `subscribe_products_issn_unique` UNIQUE (`issn`)
 );
 
 CREATE TABLE `products`
 (
     `id`                            BIGINT       NOT NULL AUTO_INCREMENT,
-    `ISBN`                          VARCHAR(50)  NOT NULL,
+    `isbn`                          VARCHAR(50)  NOT NULL,
     `title`                         VARCHAR(255) NOT NULL,
     `contents`                      TEXT         NOT NULL,
     `description`                   TEXT         NOT NULL,
@@ -283,7 +283,7 @@ CREATE TABLE `products`
     `product_saving_method_code_id` INT          NOT NULL,
     `is_deleted`                    BOOLEAN      NOT NULL DEFAULT FALSE,
     PRIMARY KEY (`id`),
-    CONSTRAINT `products_isbn_unique` UNIQUE (`ISBN`),
+    CONSTRAINT `products_isbn_unique` UNIQUE (`isbn`),
     CONSTRAINT `products_subscribe_product_ref` FOREIGN KEY (`subscribe_product_id`) REFERENCES `subscribe_products` (`id`),
     CONSTRAINT `products_thumbnail_file_ref` FOREIGN KEY (`thumbnail_file_id`) REFERENCES `files` (`id`),
     CONSTRAINT `products_ebook_file_ref` FOREIGN KEY (`ebook_file_id`) REFERENCES `files` (`id`),
