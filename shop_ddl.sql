@@ -80,7 +80,7 @@ CREATE TABLE `member_coupons`
 (
     `id`                BIGINT      NOT NULL AUTO_INCREMENT,
     `member_id`         BIGINT      NOT NULL,
-    `coupon_code`       VARCHAR(20) NOT NULL,
+    `coupon_code`       CHAR(36)    NOT NULL,
     `coupon_group_code` CHAR(36)    NOT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `member_coupons_member_ref` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`),
