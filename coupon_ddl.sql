@@ -82,23 +82,6 @@ CREATE TABLE `coupon_usage_state_code`
     PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `issued_coupons`
-(
-    `id`                         BIGINT   NOT NULL AUTO_INCREMENT,
-    `coupon_code`                CHAR(36) NOT NULL,
-    `created_datetime`           DATETIME NOT NULL,
-    `expiration_date`            DATE     NOT NULL,
-    `given_datetime`             DATETIME NULL,
-    `used_datetime`              DATETIME NULL,
-    `coupon_id`                  BIGINT   NOT NULL,
-    `coupon_given_state_code_id` INT      NOT NULL,
-    `coupon_usage_state_code_id` INT      NOT NULL,
-    PRIMARY KEY (`id`),
-    CONSTRAINT `issued_coupons_coupon_ref` FOREIGN KEY (`coupon_id`) REFERENCES `coupons` (`id`),
-    CONSTRAINT `issued_coupons_coupon_given_state_code_ref` FOREIGN KEY (`coupon_given_state_code_id`) REFERENCES `coupon_given_state_code` (`id`),
-    CONSTRAINT `issued_coupons_coupon_usage_state_code_ref` FOREIGN KEY (`coupon_usage_state_code_id`) REFERENCES `coupon_usage_state_code` (`id`)
-);
-
 CREATE TABLE `trigger_type_codes`
 (
     `id`           INT         NOT NULL AUTO_INCREMENT,
@@ -116,7 +99,7 @@ CREATE TABLE `triggers`
     CONSTRAINT `triggers_coupon_ref` FOREIGN KEY (`coupon_id`) REFERENCES `coupons` (`id`)
 );
 
-CREATE TABLE `coupon_group`
+CREATE TABLE `coupon_groups`
 (
     `id`               BIGINT   NOT NULL AUTO_INCREMENT,
     `group_code`       CHAR(36) NOT NULL,
@@ -128,9 +111,7 @@ CREATE TABLE `coupon_group`
     CONSTRAINT `coupon_group_coupon_ref` FOREIGN KEY (`coupon_id`) REFERENCES `coupons` (`id`)
 );
 
-
-
-CREATE TABLE `coupon_of_the_month_policy`
+CREATE TABLE `coupon_of_the_month_policies`
 (
     `id`        INT    NOT NULL AUTO_INCREMENT,
     `coupon_id` BIGINT NOT NULL,
@@ -138,6 +119,23 @@ CREATE TABLE `coupon_of_the_month_policy`
     `open_time` TIME   NOT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `coupon_of_the_month_policy_coupon_ref` FOREIGN KEY (`coupon_id`) REFERENCES `coupons` (`id`)
+);
+
+CREATE TABLE `issued_coupons`
+(
+    `id`                         BIGINT   NOT NULL AUTO_INCREMENT,
+    `coupon_code`                CHAR(36) NOT NULL,
+    `created_datetime`           DATETIME NOT NULL,
+    `expiration_date`            DATE     NOT NULL,
+    `given_datetime`             DATETIME NULL,
+    `used_datetime`              DATETIME NULL,
+    `coupon_group_id`            BIGINT   NOT NULL,
+    `coupon_given_state_code_id` INT      NOT NULL,
+    `coupon_usage_state_code_id` INT      NOT NULL,
+    PRIMARY KEY (`id`),
+    CONSTRAINT `issued_coupons_coupon_group_ref` FOREIGN KEY (`coupon_group_id`) REFERENCES `coupon_groups` (`id`),
+    CONSTRAINT `issued_coupons_coupon_given_state_code_ref` FOREIGN KEY (`coupon_given_state_code_id`) REFERENCES `coupon_given_state_code` (`id`),
+    CONSTRAINT `issued_coupons_coupon_usage_state_code_ref` FOREIGN KEY (`coupon_usage_state_code_id`) REFERENCES `coupon_usage_state_code` (`id`)
 );
 
 #쿠폰타입코드

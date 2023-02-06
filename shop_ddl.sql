@@ -82,6 +82,8 @@ CREATE TABLE `member_coupons`
     `member_id`         BIGINT      NOT NULL,
     `coupon_code`       CHAR(36)    NOT NULL,
     `coupon_group_code` CHAR(36)    NOT NULL,
+    `is_used`           BOOLEAN     NOT NULL,
+    `expiration_date`   DATE        NOT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `member_coupons_member_ref` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`),
     CONSTRAINT `member_coupons_code_unique` UNIQUE (`coupon_code`)
@@ -107,19 +109,19 @@ CREATE TABLE `point_codes`
 
 CREATE TABLE `point_reason_codes`
 (
-    `id`        INT         NOT NULL,
-    `reason`    VARCHAR(20) NOT NULL,
-    PRIMARY KEY(`id`)
+    `id`     INT         NOT NULL,
+    `reason` VARCHAR(20) NOT NULL,
+    PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `point_histories`
 (
-    `id`               BIGINT   NOT NULL AUTO_INCREMENT,
-    `amount`           BIGINT   NOT NULL,
-    `created_datetime` DATETIME NOT NULL,
-    `member_id`        BIGINT   NOT NULL,
-    `point_code_id`    INT      NOT NULL,
-    `point_reason_code_id` INT  NOT NULL,
+    `id`                   BIGINT   NOT NULL AUTO_INCREMENT,
+    `amount`               BIGINT   NOT NULL,
+    `created_datetime`     DATETIME NOT NULL,
+    `member_id`            BIGINT   NOT NULL,
+    `point_code_id`        INT      NOT NULL,
+    `point_reason_code_id` INT      NOT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `point_histories_member_ref` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`),
     CONSTRAINT `point_histories_point_code_ref` FOREIGN KEY (`point_code_id`) REFERENCES `point_codes` (`id`),
