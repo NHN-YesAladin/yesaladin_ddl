@@ -412,15 +412,6 @@ CREATE TABLE `order_codes`
     PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `order_recipients`
-(
-    `id`            BIGINT      NOT NULL AUTO_INCREMENT,
-    `name`          VARCHAR(20) NOT NULL,
-    `phone_number`  VARCHAR(11) NOT NULL,
-    PRIMARY KEY (`id`)
-);
-
-
 CREATE TABLE `orders`
 (
     `id`                      BIGINT       NOT NULL AUTO_INCREMENT,
@@ -433,12 +424,13 @@ CREATE TABLE `orders`
     `shipping_fee`            INT          NOT NULL,
     `wrapping_fee`            INT          NOT NULL,
     `total_amount`            BIGINT       NOT NULL,
+    `recipient_name`          VARCHAR(20)  NOT NULL,
+    `recipient_phone_number`  VARCHAR(11)  NOT NULL,
     `order_code_id`           INT          NOT NULL,
     `order_recipient_id`      BIGINT       NOT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `orders_order_number_unique` UNIQUE (`order_number`),
-    CONSTRAINT `orders_order_code_ref` FOREIGN KEY (`order_code_id`) REFERENCES `order_codes` (`id`),
-    CONSTRAINT `orders_order_recipient_ref` FOREIGN KEY (`order_recipient_id`) REFERENCES `order_recipients` (`id`)
+    CONSTRAINT `orders_order_code_ref` FOREIGN KEY (`order_code_id`) REFERENCES `order_codes` (`id`)
 );
 
 CREATE TABLE `non_member_orders`
