@@ -462,7 +462,7 @@ CREATE TABLE `order_products`
     `order_id`    BIGINT  NOT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `order_products_product_ref` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`),
-    CONSTRAINT `order_products_member_order_ref` FOREIGN KEY (`order_id`) REFERENCES `member_orders` (`order_id`)
+    CONSTRAINT `order_products_order_ref` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`)
 );
 
 CREATE TABLE `order_status_codes`
