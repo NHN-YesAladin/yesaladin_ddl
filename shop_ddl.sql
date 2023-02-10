@@ -78,12 +78,12 @@ CREATE TABLE `member_grade_histories`
 
 CREATE TABLE `member_coupons`
 (
-    `id`                BIGINT      NOT NULL AUTO_INCREMENT,
-    `member_id`         BIGINT      NOT NULL,
-    `coupon_code`       CHAR(36)    NOT NULL,
-    `coupon_group_code` CHAR(36)    NOT NULL,
-    `is_used`           BOOLEAN     NOT NULL,
-    `expiration_date`   DATE        NOT NULL,
+    `id`                BIGINT   NOT NULL AUTO_INCREMENT,
+    `member_id`         BIGINT   NOT NULL,
+    `coupon_code`       CHAR(36) NOT NULL,
+    `coupon_group_code` CHAR(36) NOT NULL,
+    `is_used`           BOOLEAN  NOT NULL,
+    `expiration_date`   DATE     NOT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `member_coupons_member_ref` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`),
     CONSTRAINT `member_coupons_code_unique` UNIQUE (`coupon_code`)
@@ -373,13 +373,13 @@ CREATE TABLE `writing`
 
 CREATE TABLE `wishlists`
 (
-    `id`                  BIGINT   NOT NULL AUTO_INCREMENT,
-    `registered_datetime` DATETIME NOT NULL DEFAULT NOW(),
     `product_id`          BIGINT   NOT NULL,
     `member_id`           BIGINT   NOT NULL,
-    PRIMARY KEY (`id`),
+    `registered_datetime` DATETIME NOT NULL DEFAULT NOW(),
+    PRIMARY KEY (`product_id`, `member_id`),
     CONSTRAINT `wishlists_product_ref` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`),
     CONSTRAINT `wishlists_member_ref` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`)
+
 );
 
 CREATE TABLE `restock_notifications`
@@ -416,7 +416,7 @@ CREATE TABLE `orders`
 (
     `id`                      BIGINT       NOT NULL AUTO_INCREMENT,
     `order_number`            VARCHAR(18)  NOT NULL,
-    `name`                    VARCHAR(255) NOT NULL,
+    `NAME`                    VARCHAR(255) NOT NULL,
     `order_datetime`          DATETIME     NOT NULL,
     `expected_transport_date` DATE         NULL,
     `is_hidden`               BOOLEAN      NOT NULL DEFAULT FALSE,
@@ -436,7 +436,7 @@ CREATE TABLE `non_member_orders`
 (
     `order_id`     BIGINT       NOT NULL,
     `address`      VARCHAR(255) NOT NULL,
-    `name`         VARCHAR(20)  NOT NULL,
+    `NAME`         VARCHAR(20)  NOT NULL,
     `phone_number` VARCHAR(11)  NOT NULL,
     PRIMARY KEY (`order_id`),
     CONSTRAINT `non_member_orders_order_ref` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`)
@@ -468,7 +468,7 @@ CREATE TABLE `order_products`
 CREATE TABLE `order_status_codes`
 (
     `id`     INT         NOT NULL,
-    `status` VARCHAR(15) NOT NULL,
+    `STATUS` VARCHAR(15) NOT NULL,
     PRIMARY KEY (`id`)
 );
 
@@ -518,7 +518,7 @@ CREATE TABLE `reviews`
 (
     `id`               BIGINT NOT NULL AUTO_INCREMENT,
     `order_product_id` BIGINT NOT NULL,
-    `comment`          TEXT   NOT NULL,
+    `COMMENT`          TEXT   NOT NULL,
     `gpa`              INT    NOT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `reviews_order_product_ref` FOREIGN KEY (`order_product_id`) REFERENCES `order_products` (`id`)
@@ -529,7 +529,7 @@ CREATE TABLE `review_image_groups`
     `id`        BIGINT NOT NULL AUTO_INCREMENT,
     `file_id`   BIGINT NOT NULL,
     `review_id` BIGINT NOT NULL,
-    `order`     INT    NOT NULL,
+    `ORDER`     INT    NOT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `review_image_groups_file_ref` FOREIGN KEY (`file_id`) REFERENCES `files` (`id`),
     CONSTRAINT `review_image_groups_review_ref` FOREIGN KEY (`review_id`) REFERENCES `reviews` (`id`)
@@ -545,7 +545,7 @@ CREATE TABLE `payment_codes`
 CREATE TABLE `payment_card_acquirer_codes`
 (
     `id`            INT         NOT NULL,
-    `code`          VARCHAR(3)  NOT NULL,
+    `CODE`          VARCHAR(3)  NOT NULL,
     `acquirer_name` VARCHAR(30) NOT NULL,
     PRIMARY KEY (`id`)
 );
@@ -578,7 +578,7 @@ CREATE TABLE `payment_cards`
 (
     `payment_id`              VARCHAR(200) NOT NULL,
     `amount`                  BIGINT       NOT NULL,
-    `number`                  VARCHAR(20)  NOT NULL,
+    `NUMBER`                  VARCHAR(20)  NOT NULL,
     `installment_plan_months` INT          NOT NULL,
     `approve_no`              VARCHAR(8)   NOT NULL,
     `use_card_point`          BOOLEAN      NOT NULL,
