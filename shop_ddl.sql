@@ -598,6 +598,15 @@ CREATE TABLE `payment_cards`
     CONSTRAINT `payment_cards_acquirer_code_ref` FOREIGN KEY (`acquirer_code_id`) REFERENCES `payment_card_acquirer_codes` (`id`)
 );
 
+CREATE TABLE `payment_easy_pays` (
+	`payment_id`	varchar(200)	NOT NULL,
+	`provider`	varchar(50)	NOT NULL,
+	`amount`	bigint	NOT NULL,
+	`discount_amount`	bigint	NOT NULL,
+    PRIMARY KEY (`payment_id`),
+    CONSTRAINT `payment_easy_pays_payment_ref` FOREIGN KEY (`payment_id`) REFERENCES `payments` (`id`)
+);
+
 CREATE TABLE `payment_cancels`
 (
     `payment_id`               VARCHAR(200) NOT NULL,
