@@ -39,7 +39,7 @@ CREATE TABLE `members`
     `id`              BIGINT       NOT NULL AUTO_INCREMENT,
     `nickname`        VARCHAR(15)  NOT NULL,
     `name`            VARCHAR(50)  NOT NULL,
-    `login_id`        VARCHAR(15)  NOT NULL,
+    `login_id`        VARCHAR(50)  NOT NULL,
     `login_password`  VARCHAR(255) NOT NULL,
     `birth_year`      INT          NOT NULL,
     `birth_month`     INT          NOT NULL,
