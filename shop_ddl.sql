@@ -830,9 +830,11 @@ VALUES (4, 'DELIVERY');
 INSERT INTO `order_status_codes`
 VALUES (5, 'COMPLETE');
 INSERT INTO `order_status_codes`
-VALUES (6, 'REFUND');
+VALUES (6, 'CONFIRM');
 INSERT INTO `order_status_codes`
-VALUES (7, 'CANCEL');
+VALUES (7, 'REFUND');
+INSERT INTO `order_status_codes`
+VALUES (8, 'CANCEL');
 
 #결제코드
 INSERT INTO `payment_codes`
