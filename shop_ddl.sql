@@ -466,6 +466,15 @@ CREATE TABLE `order_products`
     CONSTRAINT `order_products_order_ref` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`)
 );
 
+CREATE TABLE `order_coupons`
+(
+    `order_id`    BIGINT     NOT NULL,
+    `member_coupon_id` BIGINT NOT NULL,
+    PRIMARY KEY (`order_id`, `member_coupon_id`),
+    CONSTRAINT `order_coupons_order_ref` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`),
+    CONSTRAINT `order_coupons_member_coupon_ref` FOREIGN KEY (`member_coupon_id`) REFERENCES `member_coupons` (`id`)
+);
+
 CREATE TABLE `order_status_codes`
 (
     `id`     INT         NOT NULL,
