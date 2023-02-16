@@ -421,6 +421,7 @@ CREATE TABLE `orders`
     `expected_transport_date` DATE         NULL,
     `is_hidden`               BOOLEAN      NOT NULL DEFAULT FALSE,
     `used_point`              BIGINT       NOT NULL,
+    `saved_point`	      BIGINT	   NOT NULL,
     `shipping_fee`            INT          NOT NULL,
     `wrapping_fee`            INT          NOT NULL,
     `total_amount`            BIGINT       NOT NULL,
