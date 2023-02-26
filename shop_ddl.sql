@@ -39,7 +39,7 @@ CREATE TABLE `members`
     `id`              BIGINT       NOT NULL AUTO_INCREMENT,
     `nickname`        VARCHAR(15)  NOT NULL,
     `name`            VARCHAR(50)  NOT NULL,
-    `login_id`        VARCHAR(15)  NOT NULL,
+    `login_id`        VARCHAR(50)  NOT NULL,
     `login_password`  VARCHAR(255) NOT NULL,
     `birth_year`      INT          NOT NULL,
     `birth_month`     INT          NOT NULL,
@@ -421,6 +421,7 @@ CREATE TABLE `orders`
     `expected_transport_date` DATE         NULL,
     `is_hidden`               BOOLEAN      NOT NULL DEFAULT FALSE,
     `used_point`              BIGINT       NOT NULL,
+    `saved_point`	      BIGINT	   NOT NULL,
     `shipping_fee`            INT          NOT NULL,
     `wrapping_fee`            INT          NOT NULL,
     `total_amount`            BIGINT       NOT NULL,
@@ -463,6 +464,15 @@ CREATE TABLE `order_products`
     PRIMARY KEY (`id`),
     CONSTRAINT `order_products_product_ref` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`),
     CONSTRAINT `order_products_order_ref` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`)
+);
+
+CREATE TABLE `order_coupons`
+(
+    `order_id`    BIGINT     NOT NULL,
+    `member_coupon_id` BIGINT NOT NULL,
+    PRIMARY KEY (`order_id`, `member_coupon_id`),
+    CONSTRAINT `order_coupons_order_ref` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`),
+    CONSTRAINT `order_coupons_member_coupon_ref` FOREIGN KEY (`member_coupon_id`) REFERENCES `member_coupons` (`id`)
 );
 
 CREATE TABLE `order_status_codes`

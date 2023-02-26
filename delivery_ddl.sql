@@ -15,6 +15,7 @@ CREATE TABLE `transports` (
 	
 	PRIMARY KEY (`id`),
     CONSTRAINT `transports_tracking_no_unique` UNIQUE (`tracking_no`),
+    CONSTRAINT `transports_order_id_unique` UNIQUE (`order_id`),
     CONSTRAINT `transports_status_ref` FOREIGN KEY (`transport_status_code_id`) REFERENCES `transport_status_codes` (`id`)
 );
 
